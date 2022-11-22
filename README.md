@@ -44,3 +44,56 @@ Router를 구성할때 `"/"` 기본 위치가 가장 마지막에 있어야 정�
 
 이어서 헤더에 애니메이션효과와 기능을 추가해본다.
 css속성 `transform-origin`은 변화가 시작되는 위치를 지정할 수 있다.
+
+# 4. Header part Four
+
+#### useAnimation
+
+기존에 개발해오던 방식처럼 특정 코드를 통해 강제로 애니메이션을 동작시키고 싶을때 사용할 수 있다.
+(jQuery Animate와 비슷한 느낌)
+
+```JSX
+import { motion, useAnimation } from "framer-motion";
+
+function Header(){
+    const inputAnimation = useAnimation();
+    const toggleSearch = () => {
+        if(searchOpen){
+            //trigger the close animation
+            inputAnimation.start({
+                scaleX:0,
+            });
+        }else{
+            //trigger the open animation
+            inputAnimation.start({
+                scaleX:1,
+            });
+        }
+        setSearchOpen(prev => !prev);
+    }
+    return (
+      <Search>
+        <Input
+            animate={inputAnimation}
+            transition={{type:"linear"}}
+            placeholder="Search for moive or tv show"
+            type="text"
+        />
+      </Search>
+    );
+}
+```
+
+animate에 useAnimation을 걸어주고 처리해주고 싶은부분에서 start메소드 안에 obect형태로 처리하고 싶은 애니메이션을 넣어주면 된다.
+
+#### ~useViewportScroll~, useScroll
+
+useViewportScroll은 declare처리 됨. 이제 useScroll을 사용하자!
+
+##### -scroll`*`Progress
+
+x, y축에 대한 스크롤 진행도를 `0~1` 사이 값으로 보여준다.
+
+##### -scrollY, scrollX
+
+퍼센트가 아닌 실제값으로 보여준다.
