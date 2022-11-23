@@ -117,3 +117,36 @@ https://api.themoviedb.org/3/
 #### -이미지 요청(오리지널 사이즈)
 
 https://image.tmdb.org/t/p/original/
+
+# 6. Home Screent part two
+
+interface로 api에서 전달받는 데이터들의 타입을 구성하고 useQuery에 적용시켜준다.
+각각 전달받은 데이터를 통해 UI를 꾸며주고 제목과 요약글을 적용하였다.
+
+백그라운드 이미지처리를 위해 도움을 줄 함수를 작성한다.
+
+```Typescript
+//utils.ts
+export function makeImagePath(id:string, format?:string){
+    return `https://image.tmdb.org/t/p/${format?format:"original"}/${id}`;
+}
+```
+
+이미지 요청 url에 사이즈별 차이를 두기위해 해당부분은 포맷으로 처리한다.
+포맷에 요청이 없는 경우에는 original사이즈로 받도록 처리를 해주고 id에 따라 원하는 이미지를 요청해올 수 있도록 구성하였다.
+
+`* 니콜라스 선생님의 꿀팁!`
+배경에 이미지를 넣게되면 이미지 색상에 따라 앞에 표기한 글씨들이 안보이는 경우가 있는데, 이런 경우 linear-gradient효과와 동시에 처리를 해주면 좀 더 멋있게 이미지 표시와 글씨가 명확하게 보이도록 설정을 할 수 있다.
+
+```JSX
+const Banner = styled.div<{ bgPhoto:string }>`
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 60px;
+    background-image: linear-gradient(rgba(0,0,0,0), rgba(0,0,0,1)),
+                url( ${props => props.bgPhoto} );
+    background-size: cover;
+`;
+```

@@ -59,7 +59,11 @@ const GlobalStyle = createGlobalStyle`
     box-sizing: border-box;
   }
   body {
+    font-weight: 300;
     font-family: 'Source Sans Pro', sans-serif;
+    color: ${props => props.theme.white.darker};
+    line-height: 1.2;
+    background-color: #000;
   }
   a {
     text-decoration: none;
