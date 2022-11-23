@@ -97,3 +97,23 @@ x, y축에 대한 스크롤 진행도를 `0~1` 사이 값으로 보여준다.
 ##### -scrollY, scrollX
 
 퍼센트가 아닌 실제값으로 보여준다.
+
+# 5. Home Screen part One
+
+홈 화면을 만듭니다.
+메인이 될 큰 영화 포스터와 영화들의 많은 슬라이더를 만들 예정이며 해당 데이터는 themoviedb.org에서 가져옵니다.
+
+다양한 영화정보나 tv show등 정보를 api를 통해 얻어올 수 있습니다.
+
+데이터를 수집하기 위해 react-query를 사용할 것이다.
+쿼리 클라이언트를 작성합니다.
+
+## API 정리
+
+#### -BASE URL
+
+https://api.themoviedb.org/3/
+
+#### -이미지 요청(오리지널 사이즈)
+
+https://image.tmdb.org/t/p/original/
