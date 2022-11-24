@@ -162,3 +162,74 @@ AnimatePresence를 통해 사라지는 컴포넌트들에 대해서 애니메이
 슬라이더에 값을 처리했지만, 화면 사용자의 넓이를 받아온게 아닌 임의의 값을 처리했기때문에, 사용자의 화면에 따라 제대로 동작이 안될 수 있다.
 
 이럴땐 window.innerWidth 자바스크립트를 그냥 넣어주면 된다.
+
+# 8. Slider part two
+
+이번장에서는 작성한 슬라이더의 문제점들을 고쳐보겠다.
+더블클릭 형태로 빠르게 애니메이트를 처리하다보면 큰 간격이 발생하는 상태로 넘어가는걸 볼 수 있다. exit가 발생하는 도중에 새로운 Row가 또 exit가 동시에 중첩되서 발생하는 현상이다.
+
+이런 현상을 막기위해 boolean state를 생성해서 관리를 한다.
+하지만, 이런 코드도 처음 한번만 동작하고 이후에는 제대로 동작이 안되는걸 볼 수 있는데 끝난시점에서 초기화를 해주지 않기때문이다.
+
+#### -AnimatePresence
+
+##### -onExitComplete
+
+`<AnimatePresence>`의 prop 중 `onExitComplete`에 원하는 함수를 동작시키면 애니메이트의 exit가 끝나는 시점에 특정 함수를 동작시킬 수 있다. 여기서 초기화를 해주면 완벽하게 exit가 끝나고 다시 false처리를 해주어서 무한으로 슬라이더 동작을 연결할 수 있게 된다.
+
+```JSX
+function Home() {
+  const [index, setIndex] = useState(0);
+  const [leaving, setLeaving] = useState(false);
+  const increaseIndex = () => { // 동작 제한
+    if (leaving) return;
+    setLeaving(true);
+    setIndex((prev) => prev + 1);
+  };
+  const toggleLeaving = () => setLeaving((prev) => !prev);
+
+  return (
+    <Slider>
+      {/* onExitComplete를 통해 exit가 끝나는 시점을 찾는다. */}
+      <AnimatePresence onExitComplete={toggleLeaving}>
+        ...
+      </AnimatePresence>
+    </Slider>
+  );
+}
+```
+
+두번쨰 문제로 movie리스트들이 오른쪽에서 처음부터 주르륵 들어오는데 hidden값의 initial로 시작하기 때문이다.
+
+##### - initial
+
+이것 또한, `<AnimatePresence>`의 prop 중 `initial`을 사용하면 해결 할 수 있다.
+
+```JSX
+// false를 주면 initial 설정을 하지 않고 시작한다.
+<AnimatePresence initial={false} />
+```
+
+이렇게 설정해주면 처음에 오른쪽에서 hidden으로 부터 시작하지 않고 제자리에서 동작하게 된다.
+
+- 페이징 처리해보기
+
+```Typescript
+const offset = 6; // 페이지당 보여줄 개수
+let page = 0; // index 현재의 페이지 0,1,2,3
+const arr = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18];
+
+arr을 6개 단위로 쪼개본다고 했을때, offset과 page를 활용하여 짤라볼 것이다.
+slice메소드를 사용하면 된다.
+arr.slice(page*offset, page*offset+offset); // 첫번째 페이지 [1, 2, 3, 4, 5, 6]
+
+page += 1;
+arr.slice(page*offset, page*offset+offset); // 두번째 페이지 [7, 8, 9, 10, 11, 12]
+
+page += 1;
+arr.slice(page*offset, page*offset+offset); // 세번째 페이지 [13, 14, 15, 16, 17, 18]
+```
+
+\*타입스크립트 팁
+`styled(motion.div)<{bgPhoto:string}>`
+()가 있으면 오른쪽 옆에 작성해준다.

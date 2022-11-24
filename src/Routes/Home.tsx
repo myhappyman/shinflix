@@ -43,31 +43,35 @@ const Slider = styled.div`
 
 const Row = styled(motion.div)`
   display: grid;
-  gap: 10px;
+  gap: 5px;
   grid-template-columns: repeat(6, 1fr);
   margin-bottom: 5px;
   position: absolute;
   width: 100%;
 `;
 
-const Box = styled(motion.div)`
+const Box = styled(motion.div)<{ bgPhoto: string }>`
   background-color: #fff;
   height: 200px;
-  color: red;
+  background-image: url(${(props) => props.bgPhoto});
+  background-size: cover;
+  background-position: center;
   font-size: 40px;
 `;
 
 const rowVariants = {
   hidden: {
-    x: window.innerWidth + 10,
+    x: window.innerWidth + 5,
   },
   visible: {
     x: 0,
   },
   exit: {
-    x: -window.innerWidth - 10,
+    x: -window.innerWidth - 5,
   },
 };
+
+const offset = 6; // 한번에 보여줄 영화 개수
 
 function Home() {
   const { data, isLoading } = useQuery<IGetMoviesResult>(
@@ -75,7 +79,18 @@ function Home() {
     getMovies
   );
   const [index, setIndex] = useState(0);
-  const increaseIndex = () => setIndex((prev) => prev + 1);
+  const increaseIndex = () => {
+    if (data) {
+      if (leaving) return;
+      toggleLeaving(); // true 처리용 > 강제 흘러감 방지
+      const totalMovies = data.results.length - 1; // 메인 배너를 사용했기때문에 1개를 뺀다.
+      //20개 리스트에서 18개만 보여주기 위해 floor처리
+      const maxIndex = Math.floor(totalMovies / offset) - 1; // 0에서 시작하므로 1개를 뺸다.
+      setIndex((prev) => (prev === maxIndex ? 0 : prev + 1));
+    }
+  };
+  const [leaving, setLeaving] = useState(false);
+  const toggleLeaving = () => setLeaving((prev) => !prev);
   return (
     <Wrapper>
       {isLoading ? (
@@ -90,7 +105,7 @@ function Home() {
             <Overview>{data?.results[0].overview}</Overview>
           </Banner>
           <Slider>
-            <AnimatePresence>
+            <AnimatePresence initial={false} onExitComplete={toggleLeaving}>
               <Row
                 variants={rowVariants}
                 initial="hidden"
@@ -99,9 +114,15 @@ function Home() {
                 transition={{ type: "tween", duration: 1 }}
                 key={index}
               >
-                {[1, 2, 3, 4, 5, 6].map((i) => (
-                  <Box key={i}>{i}</Box>
-                ))}
+                {data?.results
+                  .slice(1) // slice1을 하고 시작하는 이유는 첫번째 배경으로 사용한 영화는 제외하기 위함이다.
+                  .slice(offset * index, offset * index + offset)
+                  .map((movie) => (
+                    <Box
+                      key={movie.id}
+                      bgPhoto={makeImagePath(movie.backdrop_path || "", "w500")}
+                    />
+                  ))}
               </Row>
             </AnimatePresence>
           </Slider>
