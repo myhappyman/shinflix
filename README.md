@@ -277,3 +277,51 @@ const Box = styled(motion.div)<{ bgPhoto: string }>`
   }
 `;
 ```
+
+# 10. Box Animations part two
+
+`Box` 컴포넌트에 마우스를 올리면 발생하는 카드를 작성해보도록 합니다.
+framer의 특징으로 부모에 variants가 걸려있다면 자식노드에도 동일한 애니메이트가 걸려있다.
+
+해당 특징을 활용하여 hover시 동작할 이름을 동일하게 맞추고 variants만 새롭게 넣어주면 추가적으로 동작하는 애니메이트를 처리할 수 있다.
+
+```JSX
+// 부모
+const boxVariants = {
+  normal: {
+    scale: 1,
+  },
+  hover: {
+    scale: 1.3,
+    y: -50,
+    transition: {
+      type: "tween",
+      delay: 0.5,
+      duration: 0.3,
+    },
+  },
+};
+
+// 자식
+const infoVariants = {
+  hover: {
+    opacity: 1,
+    transition: {
+      type: "tween",
+      delay: 0.5,
+      duration: 0.3,
+    },
+  },
+};
+
+return (
+        <Box
+          variants={boxVariants}
+          initial="normal"
+          whileHover="hover"
+          transition={{ type: "tween" }}
+        >
+          <Info variants={infoVariants} />
+        </Box>
+);
+```
