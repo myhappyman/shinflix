@@ -74,12 +74,31 @@ const Info = styled(motion.div)`
   background-color: ${(props) => props.theme.black.lighter};
   opacity: 0;
   position: relative;
-  bottom: 0;
+  top: 158px;
   width: 100%;
   h4 {
     text-align: center;
     font-size: 18px;
   }
+`;
+
+const Overlay = styled(motion.div)`
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+`;
+
+const BigMovie = styled(motion.div)`
+  position: fixed;
+  width: 40vw;
+  height: 80vh;
+  top: 50px;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
 `;
 
 const rowVariants = {
@@ -143,6 +162,9 @@ function Home() {
   const onBoxClicked = (movieId: number) => {
     navigate(`/movies/${movieId}`);
   };
+  const onOverlayClicked = () => {
+    navigate("/");
+  };
   return (
     <Wrapper>
       {isLoading ? (
@@ -190,19 +212,14 @@ function Home() {
           </Slider>
           <AnimatePresence>
             {bigMovieMatch ? (
-              <motion.div
-                layoutId={bigMovieMatch.params.movieId}
-                style={{
-                  position: "absolute",
-                  width: "40vw",
-                  height: "80vh",
-                  background: "red",
-                  top: 150,
-                  left: 0,
-                  right: 0,
-                  margin: "0 auto",
-                }}
-              ></motion.div>
+              <>
+                <Overlay
+                  onClick={onOverlayClicked}
+                  exit={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                />
+                <BigMovie layoutId={bigMovieMatch.params.movieId}></BigMovie>
+              </>
             ) : null}
           </AnimatePresence>
         </>

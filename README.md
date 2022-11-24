@@ -108,7 +108,7 @@ x, y축에 대한 스크롤 진행도를 `0~1` 사이 값으로 보여준다.
 데이터를 수집하기 위해 react-query를 사용할 것이다.
 쿼리 클라이언트를 작성합니다.
 
-## API 정리
+## API Info
 
 #### -BASE URL
 
@@ -363,3 +363,43 @@ router6이상에서는 아래처럼 변경되었다.
 이후 useMatch를 사용하여 bigMovieMatch의 값이 일치하는 경우에만 modal을 띄우도록 만들었다.
 좀 더 인터렉티브한 처리를 위해 layoutId를 사용하여 각 영화 박스와 모달에 layoutId를 설정하였고, 해당값은 영화별 pk값인 movie.id를 사용하였다.
 다만, 전달받은 값은 number형태이니 string으로 변경처리를 해주어야 한다.
+
+# 12. Movie modal part Two
+
+이번엔 overlay라는 모달 바깥 영역을 만들고 해당 영역을 클릭하면 Home으로 초기화 되도록 만들어 본다.
+모달 overlay이므로 position fixed로 꽉차도록 처리한다.
+onClick이벤트에는 navigator를 연결하여 `"/"` 또는 `-1`로 처리하여 goBack처리를 해준다.
+
+```
+navigate("/");
+navigate(-1);
+```
+
+정중앙 정렬을 위해
+
+```CSS
+/* 자주쓰던 정중앙 정렬방식 motion에선 안먹힐수있다. */
+div{
+  position:absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+}
+```
+
+해당 방식을 많이 사용하는데, layoutId등 framer를 통해 애니메이트를 걸게되면, transform을 사용하면서 css쪽에서 처리한 값이 적용되지 않는 현상이 있다.
+
+useScroll을 사용하여 위치값을 잡거나, fixed와 margin:0 auto를 활용한 방식으로 처리해야한다.
+
+```CSS
+/* 변경 후 동작되는 가운데 정렬 */
+div{
+  position: "fixed", width: "40vw", height: "80vh",
+  top: "50px", left: 0, right: 0, margin: "0 auto"
+}
+```
+
+## API Info
+
+#### -Movie Info Detail
+
+BASE_URL + `/movie/{movieId}`
+영화에 대한 상세정보를 더 많이 준다.
+코드챌린지로 해당 정보를 상세하게 가져와서 노출되도록 해보자.
