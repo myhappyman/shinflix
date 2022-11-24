@@ -233,3 +233,47 @@ arr.slice(page*offset, page*offset+offset); // 세번째 페이지 [13, 14, 15, 
 \*타입스크립트 팁
 `styled(motion.div)<{bgPhoto:string}>`
 ()가 있으면 오른쪽 옆에 작성해준다.
+
+# 9. Box Animations part One
+
+슬라이더 박스에 hover시 스케일이 커지는 효과를 작성해봅니다.
+`<Box />` 컴포넌트가 motion으로 만들어졌기때문에 컴포넌트 자체에 바로 작성을 해도 되지만 이렇게 되면
+transition이 전부다 동작하게 되어서 마우스를 올린 경우에만 딜레이를 주고싶을때는 variants로 명확하게 구분을 해줘야합니다.
+variants로 애니메이트를 설정하고 hover시에만 transition을 주게되면 마우스를 올리는 도중에만 delay처리가 가능합니다.
+
+```Typescript
+const boxVariants = {
+  normal: {
+    scale: 1,
+  },
+  hover: {
+    scale: 1.3,
+    transition: {
+      delay: 2,
+    },
+  },
+};
+```
+
+뭐 사실 whileHover쪽에 복잡하게 variants에서 작업한걸 직접 써줘도 되긴하지만... 가독성과 추후 수정을 위해서라도 variants를 써주자.
+
+\*또 한번 css꿀팁...!!! transform-origin 활용하기
+슬라이더의 첫번째와 마지막은 Scale시 왼쪽 오른쪽이 커지면서 잘리는데 이런 현상을 막기 위해
+transform-origin을 css에서 활요해주면 기가막히게 처리가 가능하다.
+
+```Typescript
+const Box = styled(motion.div)<{ bgPhoto: string }>`
+  background-color: #fff;
+  height: 200px;
+  background-image: url(${(props) => props.bgPhoto});
+  background-size: cover;
+  background-position: center;
+  font-size: 40px;
+  &:first-child {
+    transform-origin: center left;
+  }
+  &:last-child {
+    transform-origin: center right;
+  }
+`;
+```
