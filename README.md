@@ -325,3 +325,41 @@ return (
         </Box>
 );
 ```
+
+# 11. Movie Modal
+
+#### -react-router-dom
+
+##### -useNavigate
+
+router 6로 변경되면서 useHistory가 useNavigate로 변경됨.
+
+###### -~push~
+
+useHistory에는 push라는 메소드가 존재한다.
+push메소드 argument에 써준 string으로 url을 변경해준다.
+useNavigate로 변경되면서 해당 메소드는 declare처리 되었고, useNavigate를 바로 사용해주면 된다.
+
+```Typescript
+const navigate = useNavigate();
+navigate(`/movies/${movieId}`);
+```
+
+#### 다중 path <Route />처리
+
+router5이하에서는 path에 `{["/", "/movies/:movieId"]}` 형태로 처리가 가능했다.
+
+```JSX
+<Route path={["/", "/movies/:movieId"]}></Route>
+```
+
+router6이상에서는 아래처럼 변경되었다.
+
+```JSX
+<Route path="/"></Route>
+<Route path="/movies/:movieId"></Route>
+```
+
+이후 useMatch를 사용하여 bigMovieMatch의 값이 일치하는 경우에만 modal을 띄우도록 만들었다.
+좀 더 인터렉티브한 처리를 위해 layoutId를 사용하여 각 영화 박스와 모달에 layoutId를 설정하였고, 해당값은 영화별 pk값인 movie.id를 사용하였다.
+다만, 전달받은 값은 number형태이니 string으로 변경처리를 해주어야 한다.
