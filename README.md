@@ -441,3 +441,16 @@ search.get("region"); // 'kr'
 https://developers.themoviedb.org/3/search/search-companies
 
 https://developers.themoviedb.org/3/search/search-keywords
+
+# 15. Conclusions
+
+드디어 공식 강의는 끝
+앞으로 내가 원하는 형태로 챌린지를 구성하고 작성해서 포트폴리오 결과물로 작성하면 된다.
+
+1. Slide Show 좌우 화살표 형태의 UI 구성하기
+   1-1. 스크롤터짐 극복하기
+2. 영화 정보 클릭시 상세 API요청하여 더 상세하게 구성한 모달 팝업 작성해보기
+3. Tv Shows등 다양한 카테고리 영상 리스트 구성하기
+4. 검색기능으로 이동시
+
+추가적으로 생성하고 싶은 챌린지가 생기면 추가예정임
