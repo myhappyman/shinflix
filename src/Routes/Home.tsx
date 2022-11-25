@@ -34,14 +34,35 @@ const Title = styled.h2`
   font-size: 68px;
   margin-bottom: 10px;
 `;
+
 const Overview = styled.p`
-  font-size: 36px;
-  width: 50%;
+  font-size: 18px;
+  width: 38%;
 `;
 
 const Slider = styled.div`
   position: relative;
   top: -100px;
+`;
+
+const ArrowBtn = styled.div`
+  width: 30px;
+  height: 200px;
+  position: absolute;
+  top: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 99;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  opacity: 1;
+`;
+const LeftArrowBtn = styled(ArrowBtn)`
+  left: 0;
+`;
+const RightArrowBtn = styled(ArrowBtn)`
+  right: 0;
 `;
 
 const Row = styled(motion.div)`
@@ -126,6 +147,15 @@ const BigOverView = styled.p`
   color: ${(props) => props.theme.white.lighter};
 `;
 
+const arrowVariants = {
+  normal: {
+    opacity: 0,
+  },
+  hover: {
+    opacity: 1,
+  },
+};
+
 const rowVariants = {
   hidden: {
     x: window.innerWidth + 5,
@@ -171,45 +201,53 @@ function Home() {
     ["movies", "nowPlaying"],
     getMovies
   );
+
   const [index, setIndex] = useState(0);
-  const increaseIndex = () => {
+  const changeIndex = (right: boolean) => {
     if (data) {
       if (leaving) return;
       toggleLeaving(); // true 처리용 > 강제 흘러감 방지
       const totalMovies = data.results.length - 1; // 메인 배너를 사용했기때문에 1개를 뺀다.
       //20개 리스트에서 18개만 보여주기 위해 floor처리
       const maxIndex = Math.floor(totalMovies / OFFSET) - 1; // 0에서 시작하므로 1개를 뺸다.
-      setIndex((prev) => (prev === maxIndex ? 0 : prev + 1));
+
+      if (right) {
+        setIndex((prev) => (prev === maxIndex ? 0 : prev + 1));
+      } else {
+        setIndex((prev) => (prev === 0 ? maxIndex : prev - 1));
+      }
     }
   };
+
   const [leaving, setLeaving] = useState(false);
   const toggleLeaving = () => setLeaving((prev) => !prev);
   const onBoxClicked = (movieId: number) => {
     navigate(`/movies/${movieId}`);
   };
+
   const onOverlayClicked = () => {
     navigate("/");
   };
+
   const clickedMovie =
     bigMovieMatch?.params.movieId &&
     data?.results.find(
       (movie) => movie.id + "" === bigMovieMatch.params.movieId
     );
-  console.log(clickedMovie);
   return (
     <Wrapper>
       {isLoading ? (
         <Loader>Loading...</Loader>
       ) : (
         <>
-          <Banner
-            onClick={increaseIndex}
-            bgphoto={makeImagePath(data?.results[0].backdrop_path || "")}
-          >
+          <Banner bgphoto={makeImagePath(data?.results[0].backdrop_path || "")}>
             <Title>{data?.results[0].title}</Title>
             <Overview>{data?.results[0].overview}</Overview>
           </Banner>
           <Slider>
+            <LeftArrowBtn onClick={() => changeIndex(false)}>
+              <span>&#60;</span>
+            </LeftArrowBtn>
             <AnimatePresence initial={false} onExitComplete={toggleLeaving}>
               <Row
                 variants={rowVariants}
@@ -240,6 +278,9 @@ function Home() {
                   ))}
               </Row>
             </AnimatePresence>
+            <RightArrowBtn onClick={() => changeIndex(true)}>
+              <span>&#62;</span>
+            </RightArrowBtn>
           </Slider>
           <AnimatePresence>
             {bigMovieMatch ? (
