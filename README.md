@@ -403,3 +403,5 @@ div{
 BASE_URL + `/movie/{movieId}`
 영화에 대한 상세정보를 더 많이 준다.
 코드챌린지로 해당 정보를 상세하게 가져와서 노출되도록 해보자.
+
+# 13. Movie Modal part Three
