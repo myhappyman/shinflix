@@ -135,7 +135,7 @@ export function makeImagePath(id:string, format?:string){
 이미지 요청 url에 사이즈별 차이를 두기위해 해당부분은 포맷으로 처리한다.
 포맷에 요청이 없는 경우에는 original사이즈로 받도록 처리를 해주고 id에 따라 원하는 이미지를 요청해올 수 있도록 구성하였다.
 
-`* 니콜라스 선생님의 꿀팁!`
+<strong>\* 니콜라스 선생님의 꿀팁!</strong><br/>
 배경에 이미지를 넣게되면 이미지 색상에 따라 앞에 표기한 글씨들이 안보이는 경우가 있는데, 이런 경우 linear-gradient효과와 동시에 처리를 해주면 좀 더 멋있게 이미지 표시와 글씨가 명확하게 보이도록 설정을 할 수 있다.
 
 ```JSX
@@ -230,7 +230,7 @@ page += 1;
 arr.slice(page*offset, page*offset+offset); // 세번째 페이지 [13, 14, 15, 16, 17, 18]
 ```
 
-\*타입스크립트 팁
+<strong>\* 타입스크립트 팁</strong><br/>
 `styled(motion.div)<{bgPhoto:string}>`
 ()가 있으면 오른쪽 옆에 작성해준다.
 
@@ -257,7 +257,7 @@ const boxVariants = {
 
 뭐 사실 whileHover쪽에 복잡하게 variants에서 작업한걸 직접 써줘도 되긴하지만... 가독성과 추후 수정을 위해서라도 variants를 써주자.
 
-\*또 한번 css꿀팁...!!! transform-origin 활용하기
+<strong>\*또 한번 css꿀팁...!!! transform-origin 활용하기</strong><br/>
 슬라이더의 첫번째와 마지막은 Scale시 왼쪽 오른쪽이 커지면서 잘리는데 이런 현상을 막기 위해
 transform-origin을 css에서 활요해주면 기가막히게 처리가 가능하다.
 
@@ -405,3 +405,39 @@ BASE_URL + `/movie/{movieId}`
 코드챌린지로 해당 정보를 상세하게 가져와서 노출되도록 해보자.
 
 # 13. Movie Modal part Three
+
+클릭한 영화와 데이터의 정보가 일치할때 해당 내용을 기반으로 모달 팝업에 백그라운드 이미지와 제목 요약을 간단하게 작성하여 상세 모달을 작성해보았다.
+
+# 14. Search Redirect
+
+react-hook-form의 useForm을 사용하여 register, handleSubmit을 사용하여 검색창을 만들고, react-router-dom을 통해 search컴포넌트로 이동시켜서 전달받은 파라미터를 가져오도록 하였다.
+
+#### -useForm
+
+##### -register, handleSubmit
+
+register를 등록하는것만으로 input태그의 입력과 제약조건, 유효성 검사 등 다양한 설정을 할 수 있다.
+handleSubmit은 2개의 파라미터를 받는데 첫번째 인자는 필수값으로 유효한 경우 동작되는 메소드를 넣고 두번째는 실패했을 경우 동작할 파라미터를 넣어주면 된다.
+
+#### -useLoaction
+
+해당값을 통해 해당 페이지에 전달받은 값들을 받아올 수 있는데, search값에는 파라미터값이 보이고 해당값을 split 등을 통해 구분지어 변수값과 key값을 구분지을수 있는데, 이것은 다소 복잡하고 귀찮은 작업이다. 이럴때 URLSearchParameter를 사용하면 된다.
+
+#### -URLSearchParameter
+
+해당 기능은 순수 Javascript이다.(react가 아님)
+여러개의 `?key=value&key=value` 형태로 들어온 url정보를 key값의 `get()`를 통해 값을 가져올수 있다.
+
+```javascript
+const search = new URLSearchParams("?keyword=dune&region=kr");
+search.get("keyword"); // 'duen'
+search.get("region"); // 'kr'
+```
+
+## API Info
+
+#### -Search관련 doc
+
+https://developers.themoviedb.org/3/search/search-companies
+
+https://developers.themoviedb.org/3/search/search-keywords
