@@ -1,3 +1,23 @@
+# Challenge Result🚀
+
+#### -추가 챌린지 진행하면서 발생하는 이슈 정리하기
+
+##### -Slider 위치변경, boolean값, 숫자값 연산에 따른 차이 발생이슈
+
+useState를 생성해서 앞으로 가는 슬라이더인지 뒤로 가는 슬라이더인지 구분처리함.
+boolean값으로 처리해서 오른쪽 클릭은 true, 왼쪽은 false처리했는데, 이런식으로 구성하니,
+useState값을 찍어봤을때 바로바로 반영이 안되어서 방향이 바뀔때마다 Slide Animate가 꼬이는 현상 발생
+
+1, -1값으로 값 변경하여 구분 처리해주니 정상동작함.
+
+한번 값이 바뀔때는 정상동작하지 않음. 이때 exit가 유지되면서 꼬이는데, 이런 경우에도 잘 동작되도록 하기 위해서
+`*연산`으로 처리하는게 좋을것같음
+
+##### -Router이슈
+
+github에 deploy까지 처리하고 나니 Home쪽에 기본 URL이 클릭해서 이동하는게 아니면 초기값이 뜨지 않았다.
+`<Router basename={process.env.PUBLIC_URL} />` router basename처리 후 정상동작을 확인했다.
+
 # 0. ShinFlix start!
 
 드디어 넷플릭스 클론 코딩을 시작합니다.

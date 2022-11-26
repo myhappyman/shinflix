@@ -12,6 +12,7 @@
     "@types/react": "^18.0.25",
     "@types/react-dom": "^18.0.9",
     "framer-motion": "^7.6.7",
+    "gh-pages": "^4.0.0",
     "react": "^18.2.0",
     "react-beautiful-dnd": "^13.1.1",
     "react-dom": "^18.2.0",
@@ -27,7 +28,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "deploy": "gh-pages -d build",
+    "predeploy": "npm run build"
   },
   "eslintConfig": {
     "extends": [
@@ -51,5 +54,6 @@
     "@types/react-beautiful-dnd": "^13.1.2",
     "@types/react-helmet": "^6.1.5",
     "@types/styled-components": "^5.1.26"
-  }
+  },
+  "homepage": "https://myhappyman.github.io/shinflix"
 }

@@ -5,6 +5,7 @@ import { getMovies, IGetMoviesResult } from "../api";
 import { makeImagePath } from "../utils";
 import { useState } from "react";
 import { useMatch, useNavigate } from "react-router-dom";
+import path from "path";
 
 const OFFSET = 6; // 한번에 보여줄 영화 개수
 
@@ -32,17 +33,27 @@ const Banner = styled.div<{ bgphoto: string }>`
 
 const Title = styled.h2`
   font-size: 68px;
+  font-weight: 900;
   margin-bottom: 10px;
 `;
 
 const Overview = styled.p`
+  width: 34%;
   font-size: 18px;
-  width: 38%;
+  font-weight: 700;
 `;
 
 const Slider = styled.div`
   position: relative;
   top: -100px;
+`;
+
+const SliderTitle = styled.div`
+  position: absolute;
+  top: -50px;
+  font-size: 24px;
+  padding-left: 20px;
+  font-weight: 700;
 `;
 
 const ArrowBtn = styled.div`
@@ -58,9 +69,11 @@ const ArrowBtn = styled.div`
   color: #fff;
   opacity: 1;
 `;
+
 const LeftArrowBtn = styled(ArrowBtn)`
   left: 0;
 `;
+
 const RightArrowBtn = styled(ArrowBtn)`
   right: 0;
 `;
@@ -157,14 +170,21 @@ const arrowVariants = {
 };
 
 const rowVariants = {
-  hidden: {
-    x: window.innerWidth + 5,
+  hidden: (back: number) => {
+    return {
+      x: window.innerWidth * back + 5 * back,
+    };
   },
   visible: {
     x: 0,
   },
-  exit: {
-    x: -window.innerWidth - 5,
+  exit: (back: number) => {
+    console.log("exit", back);
+    const xValue = window.innerWidth * -1 * back - 5 * back;
+    console.log("exit", xValue);
+    return {
+      x: xValue,
+    };
   },
 };
 
@@ -202,8 +222,9 @@ function Home() {
     getMovies
   );
 
+  const [isBack, setIsBack] = useState(1); // left: -1, right: 1
   const [index, setIndex] = useState(0);
-  const changeIndex = (right: boolean) => {
+  const changeIndex = (slideDirect: boolean) => {
     if (data) {
       if (leaving) return;
       toggleLeaving(); // true 처리용 > 강제 흘러감 방지
@@ -211,12 +232,19 @@ function Home() {
       //20개 리스트에서 18개만 보여주기 위해 floor처리
       const maxIndex = Math.floor(totalMovies / OFFSET) - 1; // 0에서 시작하므로 1개를 뺸다.
 
-      if (right) {
-        setIndex((prev) => (prev === maxIndex ? 0 : prev + 1));
-      } else {
-        setIndex((prev) => (prev === 0 ? maxIndex : prev - 1));
-      }
+      if (isBack === 1) setIndex((prev) => (prev === maxIndex ? 0 : prev + 1));
+      else setIndex((prev) => (prev === 0 ? maxIndex : prev - 1));
     }
+  };
+  const leftSlider = () => {
+    setIsBack(-1);
+    console.log("leftSlider", isBack);
+    changeIndex(false);
+  };
+  const rightSlider = () => {
+    setIsBack(1);
+    console.log("rightSlider", isBack);
+    changeIndex(true);
   };
 
   const [leaving, setLeaving] = useState(false);
@@ -245,11 +273,17 @@ function Home() {
             <Overview>{data?.results[0].overview}</Overview>
           </Banner>
           <Slider>
-            <LeftArrowBtn onClick={() => changeIndex(false)}>
+            <SliderTitle>NOW PLAYING</SliderTitle>
+            <LeftArrowBtn onClick={leftSlider}>
               <span>&#60;</span>
             </LeftArrowBtn>
-            <AnimatePresence initial={false} onExitComplete={toggleLeaving}>
+            <AnimatePresence
+              initial={false}
+              onExitComplete={toggleLeaving}
+              custom={isBack}
+            >
               <Row
+                custom={isBack}
                 variants={rowVariants}
                 initial="hidden"
                 animate="visible"
@@ -278,7 +312,7 @@ function Home() {
                   ))}
               </Row>
             </AnimatePresence>
-            <RightArrowBtn onClick={() => changeIndex(true)}>
+            <RightArrowBtn onClick={rightSlider}>
               <span>&#62;</span>
             </RightArrowBtn>
           </Slider>

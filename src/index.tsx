@@ -1,9 +1,10 @@
 import { RecoilRoot } from "recoil";
-import ReactDOM from 'react-dom/client';
-import App from './App';
+import ReactDOM from "react-dom/client";
+import App from "./App";
 import { createGlobalStyle, ThemeProvider } from "styled-components";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { theme } from './theme';
+import { theme } from "./theme";
+import React from "react";
 
 const GlobalStyle = createGlobalStyle`
   /* http://meyerweb.com/eric/tools/css/reset/ 
@@ -61,7 +62,7 @@ const GlobalStyle = createGlobalStyle`
   body {
     font-weight: 300;
     font-family: 'Source Sans Pro', sans-serif;
-    color: ${props => props.theme.white.darker};
+    color: ${(props) => props.theme.white.darker};
     line-height: 1.2;
     background-color: #000;
   }
@@ -74,10 +75,11 @@ const GlobalStyle = createGlobalStyle`
 const client = new QueryClient();
 
 const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
+  document.getElementById("root") as HTMLElement
 );
 
 root.render(
+  <React.StrictMode>
     <RecoilRoot>
       <QueryClientProvider client={client}>
         <ThemeProvider theme={theme}>
@@ -86,5 +88,5 @@ root.render(
         </ThemeProvider>
       </QueryClientProvider>
     </RecoilRoot>
-  
+  </React.StrictMode>
 );
