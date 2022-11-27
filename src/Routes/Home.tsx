@@ -5,12 +5,12 @@ import { getMovies, IGetMoviesResult } from "../api";
 import { makeImagePath } from "../utils";
 import { useState } from "react";
 import { useMatch, useNavigate } from "react-router-dom";
-import path from "path";
 
 const OFFSET = 6; // 한번에 보여줄 영화 개수
 
 const Wrapper = styled.div`
   background: #000;
+  overflow-x: hidden;
 `;
 
 const Loader = styled.div`
@@ -43,7 +43,7 @@ const Overview = styled.p`
   font-weight: 700;
 `;
 
-const Slider = styled.div`
+const Slider = styled(motion.div)`
   position: relative;
   top: -100px;
 `;
@@ -56,7 +56,7 @@ const SliderTitle = styled.div`
   font-weight: 700;
 `;
 
-const ArrowBtn = styled.div`
+const ArrowBtn = styled(motion.div)`
   width: 30px;
   height: 200px;
   position: absolute;
@@ -161,12 +161,12 @@ const BigOverView = styled.p`
 `;
 
 const arrowVariants = {
-  normal: {
-    opacity: 0,
-  },
-  hover: {
-    opacity: 1,
-  },
+  // normal: {
+  //   opacity: 0,
+  // },
+  // hover: {
+  //   opacity: 1,
+  // },
 };
 
 const rowVariants = {
@@ -179,11 +179,8 @@ const rowVariants = {
     x: 0,
   },
   exit: (back: number) => {
-    console.log("exit", back);
-    const xValue = window.innerWidth * -1 * back - 5 * back;
-    console.log("exit", xValue);
     return {
-      x: xValue,
+      x: window.innerWidth * -1 * back - 5 * back,
     };
   },
 };
@@ -238,12 +235,10 @@ function Home() {
   };
   const leftSlider = () => {
     setIsBack(-1);
-    console.log("leftSlider", isBack);
     changeIndex(false);
   };
   const rightSlider = () => {
     setIsBack(1);
-    console.log("rightSlider", isBack);
     changeIndex(true);
   };
 
