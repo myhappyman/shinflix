@@ -10,6 +10,7 @@ import {
 import { makeImagePath } from "../utils";
 import { useState } from "react";
 import { useMatch, useNavigate } from "react-router-dom";
+import DetailModal from "./Components/DetailModal";
 
 const LIST_TYPE = ["moviesList", "tvShowList"];
 const OFFSET = 6; // 한번에 보여줄 영화 개수
@@ -51,12 +52,8 @@ const Overview = styled.p`
 
 const Slider = styled.div`
   position: relative;
-  &:nth-child(2) {
-    top: -100px;
-  }
-  &:nth-child(3) {
-    top: 300px;
-  }
+  top: -100px;
+  margin-bottom: 150px;
 `;
 
 const SliderTitle = styled.div`
@@ -94,8 +91,6 @@ const Row = styled(motion.div)`
   gap: 5px;
   grid-template-columns: repeat(6, 1fr);
   margin-bottom: 5px;
-  position: absolute;
-  top: 0;
   width: 100%;
 `;
 
@@ -217,6 +212,7 @@ const infoVariants = {
 function Home() {
   const navigate = useNavigate();
   const bigMovieMatch = useMatch("/movies/:movieId");
+  const bigTvShowMatch = useMatch("/tv/:tvId");
   // get Movies
   const { data: moviesList, isLoading: movieLoading } =
     useQuery<IGetMoviesResult>([LIST_TYPE[0], "nowPlaying"], getMovies);
@@ -280,6 +276,12 @@ function Home() {
     bigMovieMatch?.params.movieId &&
     moviesList?.results.find(
       (movie) => movie.id + "" === bigMovieMatch.params.movieId
+    );
+
+  const clickedTvShow =
+    bigTvShowMatch?.params.tvId &&
+    tvShowList?.results.find(
+      (tvShow) => tvShow.id + "" === bigTvShowMatch.params.tvId
     );
 
   return (
@@ -404,6 +406,30 @@ function Home() {
                       />
                       <BigTitle>{clickedMovie.title}</BigTitle>
                       <BigOverView>{clickedMovie.overview}</BigOverView>
+                    </>
+                  )}
+                </BigMovie>
+              </>
+            ) : bigTvShowMatch ? (
+              <>
+                <Overlay
+                  onClick={onOverlayClicked}
+                  exit={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                />
+                <BigMovie layoutId={bigTvShowMatch.params.tvId}>
+                  {clickedTvShow && (
+                    <>
+                      <BigCover
+                        style={{
+                          backgroundImage: `linear-gradient(to top, black, transparent),url(${makeImagePath(
+                            clickedTvShow.backdrop_path,
+                            "w500"
+                          )})`,
+                        }}
+                      />
+                      <BigTitle>{clickedTvShow.name}</BigTitle>
+                      <BigOverView>{clickedTvShow.overview}</BigOverView>
                     </>
                   )}
                 </BigMovie>
