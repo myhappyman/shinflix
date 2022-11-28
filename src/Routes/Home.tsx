@@ -1,11 +1,17 @@
 import { useQuery } from "@tanstack/react-query";
 import styled from "styled-components";
 import { motion, AnimatePresence } from "framer-motion";
-import { getMovies, IGetMoviesResult } from "../api";
+import {
+  getMovies,
+  getPopularTvShows,
+  IGetMoviesResult,
+  IGetTvShowsResult,
+} from "../api";
 import { makeImagePath } from "../utils";
 import { useState } from "react";
 import { useMatch, useNavigate } from "react-router-dom";
 
+const LIST_TYPE = ["moviesList", "tvShowList"];
 const OFFSET = 6; // 한번에 보여줄 영화 개수
 
 const Wrapper = styled.div`
@@ -43,9 +49,14 @@ const Overview = styled.p`
   font-weight: 700;
 `;
 
-const Slider = styled(motion.div)`
+const Slider = styled.div`
   position: relative;
-  top: -100px;
+  &:nth-child(2) {
+    top: -100px;
+  }
+  &:nth-child(3) {
+    top: 300px;
+  }
 `;
 
 const SliderTitle = styled.div`
@@ -84,6 +95,7 @@ const Row = styled(motion.div)`
   grid-template-columns: repeat(6, 1fr);
   margin-bottom: 5px;
   position: absolute;
+  top: 0;
   width: 100%;
 `;
 
@@ -160,15 +172,6 @@ const BigOverView = styled.p`
   color: ${(props) => props.theme.white.lighter};
 `;
 
-const arrowVariants = {
-  // normal: {
-  //   opacity: 0,
-  // },
-  // hover: {
-  //   opacity: 1,
-  // },
-};
-
 const rowVariants = {
   hidden: (back: number) => {
     return {
@@ -214,38 +217,59 @@ const infoVariants = {
 function Home() {
   const navigate = useNavigate();
   const bigMovieMatch = useMatch("/movies/:movieId");
-  const { data, isLoading } = useQuery<IGetMoviesResult>(
-    ["movies", "nowPlaying"],
-    getMovies
-  );
+  // get Movies
+  const { data: moviesList, isLoading: movieLoading } =
+    useQuery<IGetMoviesResult>([LIST_TYPE[0], "nowPlaying"], getMovies);
 
-  const [isBack, setIsBack] = useState(1); // left: -1, right: 1
-  const [index, setIndex] = useState(0);
-  const changeIndex = (slideDirect: boolean) => {
-    if (data) {
-      if (leaving) return;
-      toggleLeaving(); // true 처리용 > 강제 흘러감 방지
-      const totalMovies = data.results.length - 1; // 메인 배너를 사용했기때문에 1개를 뺀다.
+  // get Tv Show
+  const { data: tvShowList, isLoading: tvShowLoading } =
+    useQuery<IGetTvShowsResult>(
+      [LIST_TYPE[1], "popularTvShows"],
+      getPopularTvShows
+    );
+
+  const [movieIsBack, setMovieIsBack] = useState(1); // left: -1, right: 1
+  const [movieIndex, setMovieIndex] = useState(0);
+
+  const [tvShowIndex, setTvShowIndex] = useState(0);
+  const [tvShowIsBack, setTvShowIsBack] = useState(1); // left: -1, right: 1
+
+  const changeIndex = (slideType: string, slideDirect: boolean) => {
+    if (leaving) return;
+
+    if (slideType === LIST_TYPE[0] && moviesList) {
+      if (slideDirect) setMovieIsBack(1);
+      else setMovieIsBack(-1);
+
+      const totalMovies = moviesList.results.length;
       //20개 리스트에서 18개만 보여주기 위해 floor처리
-      const maxIndex = Math.floor(totalMovies / OFFSET) - 1; // 0에서 시작하므로 1개를 뺸다.
+      const maxMovieIndex = Math.floor(totalMovies / OFFSET);
 
-      if (isBack === 1) setIndex((prev) => (prev === maxIndex ? 0 : prev + 1));
-      else setIndex((prev) => (prev === 0 ? maxIndex : prev - 1));
+      if (movieIsBack === 1)
+        setMovieIndex((prev) => (prev === maxMovieIndex ? 0 : prev + 1));
+      else setMovieIndex((prev) => (prev === 0 ? maxMovieIndex : prev - 1));
+    } else if (slideType === LIST_TYPE[1] && moviesList) {
+      if (slideDirect) setTvShowIsBack(1);
+      else setTvShowIsBack(-1);
+
+      const totalTvShow = tvShowList ? tvShowList.results.length : 0;
+      const maxTvShowsIndex = Math.floor(totalTvShow / OFFSET);
+      if (tvShowIsBack === 1)
+        setTvShowIndex((prev) => (prev === maxTvShowsIndex ? 0 : prev + 1));
+      else setTvShowIndex((prev) => (prev === 0 ? maxTvShowsIndex : prev - 1));
     }
+    toggleLeaving(); // true 처리용 > 강제 흘러감 방지
   };
-  const leftSlider = () => {
-    setIsBack(-1);
-    changeIndex(false);
+  const leftSlider = (slideType: string) => {
+    changeIndex(slideType, false);
   };
-  const rightSlider = () => {
-    setIsBack(1);
-    changeIndex(true);
+  const rightSlider = (slideType: string) => {
+    changeIndex(slideType, true);
   };
-
   const [leaving, setLeaving] = useState(false);
   const toggleLeaving = () => setLeaving((prev) => !prev);
-  const onBoxClicked = (movieId: number) => {
-    navigate(`/movies/${movieId}`);
+  const onBoxClicked = (types: string, movieId: number) => {
+    navigate(`/${types}/${movieId}`);
   };
 
   const onOverlayClicked = () => {
@@ -254,41 +278,43 @@ function Home() {
 
   const clickedMovie =
     bigMovieMatch?.params.movieId &&
-    data?.results.find(
+    moviesList?.results.find(
       (movie) => movie.id + "" === bigMovieMatch.params.movieId
     );
+
   return (
     <Wrapper>
-      {isLoading ? (
+      {movieLoading || tvShowLoading ? (
         <Loader>Loading...</Loader>
       ) : (
         <>
-          <Banner bgphoto={makeImagePath(data?.results[0].backdrop_path || "")}>
-            <Title>{data?.results[0].title}</Title>
-            <Overview>{data?.results[0].overview}</Overview>
+          <Banner
+            bgphoto={makeImagePath(moviesList?.results[0].backdrop_path || "")}
+          >
+            <Title>{moviesList?.results[0].title}</Title>
+            <Overview>{moviesList?.results[0].overview}</Overview>
           </Banner>
           <Slider>
             <SliderTitle>NOW PLAYING</SliderTitle>
-            <LeftArrowBtn onClick={leftSlider}>
+            <LeftArrowBtn onClick={() => leftSlider(LIST_TYPE[0])}>
               <span>&#60;</span>
             </LeftArrowBtn>
             <AnimatePresence
               initial={false}
               onExitComplete={toggleLeaving}
-              custom={isBack}
+              custom={movieIsBack}
             >
               <Row
-                custom={isBack}
+                custom={movieIsBack}
                 variants={rowVariants}
                 initial="hidden"
                 animate="visible"
                 exit="exit"
                 transition={{ type: "tween", duration: 1 }}
-                key={index}
+                key={movieIndex}
               >
-                {data?.results
-                  .slice(1) // slice1을 하고 시작하는 이유는 첫번째 배경으로 사용한 영화는 제외하기 위함이다.
-                  .slice(OFFSET * index, OFFSET * index + OFFSET)
+                {moviesList?.results
+                  .slice(OFFSET * movieIndex, OFFSET * movieIndex + OFFSET)
                   .map((movie) => (
                     <Box
                       key={movie.id}
@@ -298,7 +324,7 @@ function Home() {
                       transition={{ type: "tween" }}
                       layoutId={movie.id + ""}
                       bgphoto={makeImagePath(movie.backdrop_path || "", "w500")}
-                      onClick={() => onBoxClicked(movie.id)}
+                      onClick={() => onBoxClicked("movies", movie.id)}
                     >
                       <Info variants={infoVariants}>
                         <h4>{movie.title}</h4>
@@ -307,7 +333,53 @@ function Home() {
                   ))}
               </Row>
             </AnimatePresence>
-            <RightArrowBtn onClick={rightSlider}>
+            <RightArrowBtn onClick={() => rightSlider(LIST_TYPE[0])}>
+              <span>&#62;</span>
+            </RightArrowBtn>
+          </Slider>
+          <Slider>
+            <SliderTitle>POPULAR TV SHOWS</SliderTitle>
+            <LeftArrowBtn onClick={() => leftSlider(LIST_TYPE[1])}>
+              <span>&#60;</span>
+            </LeftArrowBtn>
+            <AnimatePresence
+              initial={false}
+              onExitComplete={toggleLeaving}
+              custom={tvShowIsBack}
+            >
+              <Row
+                custom={tvShowIsBack}
+                variants={rowVariants}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                transition={{ type: "tween", duration: 1 }}
+                key={tvShowIndex}
+              >
+                {tvShowList?.results
+                  .slice(OFFSET * tvShowIndex, OFFSET * tvShowIndex + OFFSET)
+                  .map((tvShow) => (
+                    <Box
+                      key={tvShow.id}
+                      variants={boxVariants}
+                      initial="normal"
+                      whileHover="hover"
+                      transition={{ type: "tween" }}
+                      layoutId={tvShow.id + ""}
+                      bgphoto={makeImagePath(
+                        tvShow.backdrop_path || "",
+                        "w500"
+                      )}
+                      onClick={() => onBoxClicked("tv", tvShow.id)}
+                    >
+                      <Info variants={infoVariants}>
+                        <h4>{tvShow.name}</h4>
+                      </Info>
+                    </Box>
+                  ))}
+              </Row>
+            </AnimatePresence>
+            <RightArrowBtn onClick={() => rightSlider(LIST_TYPE[1])}>
               <span>&#62;</span>
             </RightArrowBtn>
           </Slider>
