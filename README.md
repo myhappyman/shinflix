@@ -18,10 +18,16 @@ useState값을 찍어봤을때 바로바로 반영이 안되어서 방향이 바
 기존 UI와 새로 생기는 팝업에는 position 속성이 없도록 처리해야함. transform속성이 자연스럽게 적용되는데,
 이때문에 기존 UI에 영향을 받아서 자리가 이동하는 현상이 발생할 수 있음.
 
-##### -Router이슈
+##### -Router issue
 
 github에 deploy까지 처리하고 나니 Home쪽에 기본 URL이 클릭해서 이동하는게 아니면 초기값이 뜨지 않았다.
 `<Router basename={process.env.PUBLIC_URL} />` router basename처리 후 정상동작을 확인했다.
+
+##### -Slider position issue
+
+슬라이더 relative와 absolute를 통해 위치를 고정시킨 후 해당 위치에서 motion의 도움을 받아 슬라이더 쇼 형태를 만들었는데, 여러개를 만들면서 겹쳐지는 현상이 있었다.
+absolute의 영역 덩어리의 사이즈가 없다보니 겹치는 현상이였는데, 이런 경우 꼭 height등으로 영역의 사이즈를 잡아줘서 겹치지 않도록 하자. position다시 한번 공부할것...
+css 학습 필요 ㅠㅠ
 
 # 0. ShinFlix start!
 

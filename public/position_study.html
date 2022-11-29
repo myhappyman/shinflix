@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      .Slider {
+        position: relative;
+        height: 200px;
+      }
+      .SliderTitle {
+        font-size: 28px;
+        font-weight: 700;
+      }
+      .Row {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 20px;
+        position: absolute;
+      }
+      .Box {
+        text-align: center;
+        outline: 1px solid black;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="Slider">
+      <h1 class="SliderTitle">NOW PLAYING</h1>
+      <div class="Row">
+        <div class="Box">Slide1</div>
+        <div class="Box">Slide2</div>
+        <div class="Box">Slide3</div>
+        <div class="Box">Slide4</div>
+        <div class="Box">Slide5</div>
+        <div class="Box">Slide6</div>
+      </div>
+    </div>
+    <div class="Slider">
+      <h1 class="SliderTitle">TV SHOWS</h1>
+      <div class="Row">
+        <div class="Box">Slide1</div>
+        <div class="Box">Slide2</div>
+        <div class="Box">Slide3</div>
+        <div class="Box">Slide4</div>
+        <div class="Box">Slide5</div>
+        <div class="Box">Slide6</div>
+      </div>
+    </div>
+  </body>
+</html>

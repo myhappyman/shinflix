@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+      }
+      .div_wrap {
+        position: relative;
+        /* top: -130px; */
+      }
+      .div {
+        position: relative;
+        height: 200px;
+      }
+      .slide {
+        position: absolute;
+        left: 0;
+        top: 0;
+      }
+      .test1 {
+        background-color: red;
+      }
+      .test2 {
+        background-color: blue;
+      }
+      .test3 {
+        background-color: blueviolet;
+      }
+      .test4 {
+        background-color: green;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="div_wrap">
+      <div class="div test1">
+        <div class="slide">슬라이드1</div>
+      </div>
+
+      <div class="div test2">
+        <div class="slide">슬라이드2</div>
+      </div>
+
+      <div class="div test3">
+        <div class="slide">슬라이드3</div>
+      </div>
+
+      <div class="div test4">
+        <div class="slide">슬라이드4</div>
+      </div>
+    </div>
+  </body>
+</html>
