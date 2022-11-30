@@ -127,9 +127,10 @@ interface ISlider {
   data: IGetDataResult;
   title: string;
   listType: string;
+  menuName: string;
 }
 
-export default function Sliders({ data, title, listType }: ISlider) {
+export default function Sliders({ data, title, listType, menuName }: ISlider) {
   const OFFSET = 6; // 한번에 보여줄 영화 개수
   const [isBack, setIsBack] = useState(1); // left: -1, right: 1
   const [index, setIndex] = useState(0);
@@ -162,8 +163,8 @@ export default function Sliders({ data, title, listType }: ISlider) {
   };
 
   const navigate = useNavigate();
-  const onBoxClicked = (type: string, id: number) => {
-    navigate(`/detail/${type}/${id}`);
+  const onBoxClicked = (menu: string, type: string, id: number) => {
+    navigate(`/${menu}/${type}/${id}`);
   };
 
   return (
@@ -200,7 +201,7 @@ export default function Sliders({ data, title, listType }: ISlider) {
                 transition={{ type: "tween" }}
                 layoutId={d.id + "" + listType}
                 bgphoto={makeImagePath(d.backdrop_path || "", "w500")}
-                onClick={() => onBoxClicked(listType, d.id)}
+                onClick={() => onBoxClicked(menuName, listType, d.id)}
               >
                 <Info variants={infoVariants}>
                   <h4>{d.title}</h4>

@@ -47,11 +47,13 @@ function Home() {
               data={moviesList as IGetDataResult}
               title={"NOW PLAYING"}
               listType={LIST_TYPE[0]}
+              menuName={"home"}
             />
             <Sliders
               data={tvShowList as IGetDataResult}
               title={"POPULAR TV SHOWS"}
               listType={LIST_TYPE[1]}
+              menuName={"home"}
             />
           </SliderArea>
         </>

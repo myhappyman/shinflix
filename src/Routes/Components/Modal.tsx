@@ -25,6 +25,7 @@ const BigMovie = styled(motion.div)`
   border-radius: 15px;
   overflow: hidden;
   background-color: ${(props) => props.theme.black.lighter};
+  z-index: 99;
 `;
 
 const BigCover = styled.div`
@@ -55,27 +56,51 @@ interface IModal {
 
 export default function Modal({ listType }: IModal) {
   const navigate = useNavigate();
-  const bigMatch = useMatch(`/detail/${listType}/:id`);
+  const bigHomeMatch = useMatch(`/home/${listType}/:id`);
+  const bigTvMatch = useMatch(`/tv/${listType}/:id`);
   const onOverlayClicked = () => {
     navigate("/");
   };
 
-  const { data, isLoading } = useQuery<IDetailInfo>([listType, "detail"], () =>
-    getDetailMovies(bigMatch?.params.id + "")
+  const { data, isLoading } = useQuery<IDetailInfo>(
+    [listType + bigHomeMatch?.params.id, "detail"],
+    () => getDetailMovies(+bigHomeMatch?.params.id!)
   );
-
-  console.log(data);
 
   return (
     <AnimatePresence>
-      {bigMatch && !isLoading ? (
+      {bigHomeMatch && data && !isLoading ? (
         <>
           <Overlay
             onClick={onOverlayClicked}
             exit={{ opacity: 0 }}
             animate={{ opacity: 1 }}
           />
-          <BigMovie layoutId={bigMatch.params.id + listType}>
+          <BigMovie layoutId={bigHomeMatch.params.id + listType}>
+            {
+              <>
+                <BigCover
+                  style={{
+                    backgroundImage: `linear-gradient(to top, black, transparent),url(${makeImagePath(
+                      data?.backdrop_path || "",
+                      "w500"
+                    )})`,
+                  }}
+                />
+                <BigTitle>{data?.title}</BigTitle>
+                <BigOverView>{data?.overview}</BigOverView>
+              </>
+            }
+          </BigMovie>
+        </>
+      ) : bigTvMatch && data && !isLoading ? (
+        <>
+          <Overlay
+            onClick={onOverlayClicked}
+            exit={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+          />
+          <BigMovie layoutId={bigTvMatch.params.id + listType}>
             {
               <>
                 <BigCover

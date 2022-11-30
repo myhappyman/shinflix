@@ -43,7 +43,7 @@ const BannerBtn = styled.button`
 function Banner({ bannerInfo }: { bannerInfo: IData }) {
   return (
     <Wrapper bgphoto={makeImagePath(bannerInfo.backdrop_path || "")}>
-      <Title>{bannerInfo.title}</Title>
+      <Title>{bannerInfo.title ? bannerInfo.title : bannerInfo.name}</Title>
       <Overview>{bannerInfo.overview}</Overview>
       <ButtonArea>
         <BannerBtn>재생</BannerBtn>

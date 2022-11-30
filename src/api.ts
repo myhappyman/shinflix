@@ -46,8 +46,7 @@ export function getPopularTvShows() {
   ).then((response) => response.json());
 }
 
-export function getDetailMovies(movieId: string) {
-  console.log("movieId >", movieId);
+export function getDetailMovies(movieId: number) {
   return fetch(
     `${BASE_PATH}/movie/${movieId}?api_key=${API_KEY}&language=${LANGUAGE}&region=${REGION}`
   ).then((response) => response.json());
