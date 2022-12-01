@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "framer-motion";
 import { useMatch, useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { getDetailMovies, IDetailInfo } from "../../api";
+import { getDetailData, IDetailInfo } from "../../api";
 import { makeImagePath } from "../../utils";
 
 const Overlay = styled(motion.div)`
@@ -12,6 +12,7 @@ const Overlay = styled(motion.div)`
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   opacity: 0;
+  z-index: 99;
 `;
 
 const BigMovie = styled(motion.div)`
@@ -25,7 +26,7 @@ const BigMovie = styled(motion.div)`
   border-radius: 15px;
   overflow: hidden;
   background-color: ${(props) => props.theme.black.lighter};
-  z-index: 99;
+  z-index: 100;
 `;
 
 const BigCover = styled.div`
@@ -52,31 +53,33 @@ const BigOverView = styled.p`
 
 interface IModal {
   listType: string;
+  menuName: string;
 }
 
-export default function Modal({ listType }: IModal) {
+export default function Modal({ listType, menuName }: IModal) {
   const navigate = useNavigate();
-  const bigHomeMatch = useMatch(`/home/${listType}/:id`);
-  const bigTvMatch = useMatch(`/tv/${listType}/:id`);
+  const bigMatch = useMatch(`/${menuName}/${listType}/:id`);
   const onOverlayClicked = () => {
-    navigate("/");
+    if (menuName === "home") menuName = "";
+    console.log("menuName", menuName);
+    navigate(`/${menuName}`);
   };
 
   const { data, isLoading } = useQuery<IDetailInfo>(
-    [listType + bigHomeMatch?.params.id, "detail"],
-    () => getDetailMovies(+bigHomeMatch?.params.id!)
+    [listType + bigMatch?.params.id, "detail" + bigMatch?.params.id],
+    () => getDetailData(listType, menuName, +bigMatch?.params.id!) || null
   );
 
   return (
     <AnimatePresence>
-      {bigHomeMatch && data && !isLoading ? (
+      {bigMatch && bigMatch?.params.id && data ? (
         <>
           <Overlay
             onClick={onOverlayClicked}
             exit={{ opacity: 0 }}
             animate={{ opacity: 1 }}
           />
-          <BigMovie layoutId={bigHomeMatch.params.id + listType}>
+          <BigMovie layoutId={bigMatch.params.id + listType}>
             {
               <>
                 <BigCover
@@ -87,31 +90,7 @@ export default function Modal({ listType }: IModal) {
                     )})`,
                   }}
                 />
-                <BigTitle>{data?.title}</BigTitle>
-                <BigOverView>{data?.overview}</BigOverView>
-              </>
-            }
-          </BigMovie>
-        </>
-      ) : bigTvMatch && data && !isLoading ? (
-        <>
-          <Overlay
-            onClick={onOverlayClicked}
-            exit={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-          />
-          <BigMovie layoutId={bigTvMatch.params.id + listType}>
-            {
-              <>
-                <BigCover
-                  style={{
-                    backgroundImage: `linear-gradient(to top, black, transparent),url(${makeImagePath(
-                      data?.backdrop_path || "",
-                      "w500"
-                    )})`,
-                  }}
-                />
-                <BigTitle>{data?.title}</BigTitle>
+                <BigTitle>{data?.title ? data?.title : data?.name}</BigTitle>
                 <BigOverView>{data?.overview}</BigOverView>
               </>
             }

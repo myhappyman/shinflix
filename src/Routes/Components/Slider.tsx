@@ -135,6 +135,7 @@ export default function Sliders({ data, title, listType, menuName }: ISlider) {
   const [isBack, setIsBack] = useState(1); // left: -1, right: 1
   const [index, setIndex] = useState(0);
   const [leaving, setLeaving] = useState(false);
+  const [modalMode, setModalMode] = useState(false);
 
   const toggleLeaving = () => setLeaving((prev) => !prev);
 
@@ -201,16 +202,19 @@ export default function Sliders({ data, title, listType, menuName }: ISlider) {
                 transition={{ type: "tween" }}
                 layoutId={d.id + "" + listType}
                 bgphoto={makeImagePath(d.backdrop_path || "", "w500")}
-                onClick={() => onBoxClicked(menuName, listType, d.id)}
+                onClick={() => {
+                  setModalMode((prev) => !prev);
+                  onBoxClicked(menuName, listType, d.id);
+                }}
               >
                 <Info variants={infoVariants}>
-                  <h4>{d.title}</h4>
+                  <h4>{d.title ? d.title : d.name}</h4>
                 </Info>
               </Box>
             ))}
         </Row>
       </AnimatePresence>
-      <Modal listType={listType} />
+      {modalMode ? <Modal listType={listType} menuName={menuName} /> : null}
     </Wrapper>
   );
 }

@@ -1,7 +1,14 @@
 const API_KEY = "dbf6ad83e201e98cbf498fbcfd80bf8a";
-const BASE_PATH = "https://api.themoviedb.org/3";
 const LANGUAGE = "ko-KO";
 const REGION = "KR";
+const BASE_PATH = "https://api.themoviedb.org/3";
+const TAIL_PATH = `api_key=${API_KEY}&language=${LANGUAGE}&region=${REGION}`;
+export const LIST_TYPE = [
+  "nowPlayingMoviesList",
+  "upcomingList",
+  "popularMovieList",
+  "tvShowList",
+]; // 영상 종류
 
 // 영화 데이터
 export interface IData {
@@ -28,26 +35,55 @@ export interface IGetDataResult {
 export interface IDetailInfo {
   id: number;
   overview: string;
-  title: string;
+  title?: string;
+  name?: string;
   vote_average: number;
   runtime: number;
   backdrop_path: string;
 }
 
-export function getMovies() {
-  return fetch(
-    `${BASE_PATH}/movie/now_playing?api_key=${API_KEY}&language=${LANGUAGE}&region=${REGION}`
-  ).then((response) => response.json());
+// Movies - NowPlaying
+export function getNowPlayingMovies() {
+  return fetch(`${BASE_PATH}/movie/now_playing?${TAIL_PATH}`).then((response) =>
+    response.json()
+  );
 }
 
+// Movies - Popular
+export function getPopularMovies() {
+  return fetch(`${BASE_PATH}/movie/popular?${TAIL_PATH}`).then((response) =>
+    response.json()
+  );
+}
+
+// Movies - Upcoming
+export function getUpcomingMovies() {
+  return fetch(`${BASE_PATH}/movie/upcoming?${TAIL_PATH}`).then((response) =>
+    response.json()
+  );
+}
+
+// TvShows
 export function getPopularTvShows() {
-  return fetch(
-    `${BASE_PATH}/tv/popular?api_key=${API_KEY}&language=${LANGUAGE}&region=${REGION}`
-  ).then((response) => response.json());
+  return fetch(`${BASE_PATH}/tv/popular?${TAIL_PATH}`).then((response) =>
+    response.json()
+  );
 }
 
-export function getDetailMovies(movieId: number) {
-  return fetch(
-    `${BASE_PATH}/movie/${movieId}?api_key=${API_KEY}&language=${LANGUAGE}&region=${REGION}`
-  ).then((response) => response.json());
+export function getDetailData(
+  listType: string,
+  menuName: string,
+  movieId: number
+) {
+  if (menuName === "home") {
+    if (listType === LIST_TYPE[3]) {
+      menuName = "tv";
+    } else {
+      menuName = "movie";
+    }
+  }
+
+  return fetch(`${BASE_PATH}/${menuName}/${movieId}?${TAIL_PATH}`).then(
+    (response) => response.json()
+  );
 }

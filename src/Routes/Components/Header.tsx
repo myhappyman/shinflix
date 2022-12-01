@@ -14,6 +14,7 @@ const Nav = styled(motion.nav)`
   font-size: 14px;
   padding: 20px 60px;
   color: #fff;
+  z-index: 98;
 `;
 
 const Col = styled.div`
@@ -108,8 +109,8 @@ interface IForm {
 
 function Header() {
   const [searchOpen, setSearchOpen] = useState(false);
-  const homeMatch: PathMatch<string> | null = useMatch("/");
-  const tvMatch: PathMatch<string> | null = useMatch("/tv");
+  const homeMatch: PathMatch<string> | null = useMatch("*");
+  const tvMatch: PathMatch<string> | null = useMatch("/tv/*");
   const navAnimation = useAnimation();
   const inputAnimation = useAnimation();
   const { scrollY } = useScroll();
