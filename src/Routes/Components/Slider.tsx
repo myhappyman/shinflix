@@ -81,18 +81,18 @@ const Info = styled(motion.div)`
 `;
 
 const rowVariants = {
-  hidden: (back: number) => {
+  hidden: (right: number) => {
     return {
-      x: window.innerWidth * back + 5 * back,
+      x: right === 1 ? window.innerWidth : -window.innerWidth,
     };
   },
   visible: {
     x: 0,
     y: 0,
   },
-  exit: (back: number) => {
+  exit: (right: number) => {
     return {
-      x: window.innerWidth * -1 * back - 5 * back,
+      x: right === 1 ? -window.innerWidth : window.innerWidth,
     };
   },
 };
@@ -132,35 +132,28 @@ interface ISlider {
 
 export default function Sliders({ data, title, listType, menuName }: ISlider) {
   const OFFSET = 6; // 한번에 보여줄 영화 개수
-  const [isBack, setIsBack] = useState(1); // left: -1, right: 1
+  const [isRight, setIsRight] = useState(1); // left: -1, right: 1
   const [index, setIndex] = useState(0);
   const [leaving, setLeaving] = useState(false);
   const [modalMode, setModalMode] = useState(false);
 
   const toggleLeaving = () => setLeaving((prev) => !prev);
-
-  const changeIndex = (slideDirect: boolean) => {
+  const changeIndex = (right: number) => {
     if (leaving) return;
 
     if (data) {
       toggleLeaving(); // true 처리용 > 강제 흘러감 방지
-      if (slideDirect) setIsBack(1);
-      else setIsBack(-1);
-
+      setIsRight(right);
       const totalLength = data.results.length;
       //20개 리스트에서 18개만 보여주기 위해 floor처리
       const maxIndex = Math.floor(totalLength / OFFSET);
 
-      if (isBack === 1) setIndex((prev) => (prev === maxIndex ? 0 : prev + 1));
-      else setIndex((prev) => (prev === 0 ? maxIndex : prev - 1));
-    }
-  };
+      right === 1
+        ? setIndex((prev) => (prev === maxIndex ? 0 : prev + 1))
+        : setIndex((prev) => (prev === 0 ? maxIndex : prev - 1));
 
-  const leftSlider = (slideType: string) => {
-    changeIndex(false);
-  };
-  const rightSlider = (slideType: string) => {
-    changeIndex(true);
+      // console.log(data?.results.slice(OFFSET * index, OFFSET * index + OFFSET));
+    }
   };
 
   const navigate = useNavigate();
@@ -171,19 +164,19 @@ export default function Sliders({ data, title, listType, menuName }: ISlider) {
   return (
     <Wrapper>
       <Title>{title}</Title>
-      <LeftArrowBtn onClick={() => leftSlider(listType)}>
+      <LeftArrowBtn onClick={() => changeIndex(-1)}>
         <span>&#60;</span>
       </LeftArrowBtn>
-      <RightArrowBtn onClick={() => rightSlider(listType)}>
+      <RightArrowBtn onClick={() => changeIndex(1)}>
         <span>&#62;</span>
       </RightArrowBtn>
       <AnimatePresence
         initial={false}
         onExitComplete={toggleLeaving}
-        custom={isBack}
+        custom={isRight}
       >
         <Row
-          custom={isBack}
+          custom={isRight}
           variants={rowVariants}
           initial="hidden"
           animate="visible"
@@ -203,6 +196,7 @@ export default function Sliders({ data, title, listType, menuName }: ISlider) {
                 layoutId={d.id + "" + listType}
                 bgphoto={makeImagePath(d.backdrop_path || "", "w500")}
                 onClick={() => {
+                  console.log("d.id > ", d.id);
                   setModalMode((prev) => !prev);
                   onBoxClicked(menuName, listType, d.id);
                 }}

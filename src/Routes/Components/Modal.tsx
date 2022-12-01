@@ -60,8 +60,8 @@ export default function Modal({ listType, menuName }: IModal) {
   const navigate = useNavigate();
   const bigMatch = useMatch(`/${menuName}/${listType}/:id`);
   const onOverlayClicked = () => {
+    console.log("onOverlayClicked", menuName);
     if (menuName === "home") menuName = "";
-    console.log("menuName", menuName);
     navigate(`/${menuName}`);
   };
 
@@ -72,7 +72,7 @@ export default function Modal({ listType, menuName }: IModal) {
 
   return (
     <AnimatePresence>
-      {bigMatch && bigMatch?.params.id && data ? (
+      {bigMatch && data && !isLoading ? (
         <>
           <Overlay
             onClick={onOverlayClicked}
