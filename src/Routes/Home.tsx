@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { AnimatePresence } from "framer-motion";
 import styled from "styled-components";
 import {
   getNowPlayingMovies,
@@ -10,6 +11,7 @@ import {
   LIST_TYPE,
 } from "../api";
 import Banner from "./Components/Banner";
+import Modal from "./Components/Modal";
 import Sliders from "./Components/Slider";
 
 const Wrapper = styled.div`

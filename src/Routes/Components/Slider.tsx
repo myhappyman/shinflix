@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import styled from "styled-components";
 import { IGetDataResult } from "../../api";
 import { makeImagePath } from "../../utils";
-import { useNavigate } from "react-router-dom";
+import { PathMatch, useMatch, useNavigate } from "react-router-dom";
 import Modal from "./Modal";
 
 const Wrapper = styled.div`
@@ -135,7 +135,6 @@ export default function Sliders({ data, title, listType, menuName }: ISlider) {
   const [isRight, setIsRight] = useState(1); // left: -1, right: 1
   const [index, setIndex] = useState(0);
   const [leaving, setLeaving] = useState(false);
-  const [modalMode, setModalMode] = useState(false);
 
   const toggleLeaving = () => setLeaving((prev) => !prev);
   const changeIndex = (right: number) => {
@@ -160,6 +159,10 @@ export default function Sliders({ data, title, listType, menuName }: ISlider) {
   const onBoxClicked = (menu: string, type: string, id: number) => {
     navigate(`/${menu}/${type}/${id}`);
   };
+
+  const bigMatch: PathMatch<string> | null = useMatch(
+    `/${menuName}/${listType}/:id`
+  );
 
   return (
     <Wrapper>
@@ -197,7 +200,6 @@ export default function Sliders({ data, title, listType, menuName }: ISlider) {
                 bgphoto={makeImagePath(d.backdrop_path || "", "w500")}
                 onClick={() => {
                   console.log("d.id > ", d.id);
-                  setModalMode((prev) => !prev);
                   onBoxClicked(menuName, listType, d.id);
                 }}
               >
@@ -208,7 +210,15 @@ export default function Sliders({ data, title, listType, menuName }: ISlider) {
             ))}
         </Row>
       </AnimatePresence>
-      {modalMode ? <Modal listType={listType} menuName={menuName} /> : null}
+      <AnimatePresence>
+        {bigMatch ? (
+          <Modal
+            dataId={Number(bigMatch?.params.id)}
+            listType={listType}
+            menuName={menuName}
+          />
+        ) : null}
+      </AnimatePresence>
     </Wrapper>
   );
 }

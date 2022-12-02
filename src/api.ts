@@ -70,6 +70,7 @@ export function getPopularTvShows() {
   );
 }
 
+// Modal Popup getDetail Info Api
 export function getDetailData(
   listType: string,
   menuName: string,

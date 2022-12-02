@@ -56,8 +56,7 @@ const Circle = styled(motion.span)`
   width: 5px;
   height: 5px;
   border-radius: 2.5px;
-  bottom: -5px;
-  left: 50%;
+  right: -8px;
   transition: transformX(-50%);
   background-color: ${(props) => props.theme.red};
 `;

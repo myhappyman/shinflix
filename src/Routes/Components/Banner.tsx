@@ -24,6 +24,7 @@ const Overview = styled.p`
   font-size: 18px;
   font-weight: 700;
   margin-bottom: 10px;
+  line-height: 25px;
 `;
 
 const ButtonArea = styled.div`

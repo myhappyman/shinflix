@@ -52,51 +52,47 @@ const BigOverView = styled.p`
 `;
 
 interface IModal {
+  dataId: number;
   listType: string;
   menuName: string;
 }
 
-export default function Modal({ listType, menuName }: IModal) {
+export default function Modal({ dataId, listType, menuName }: IModal) {
   const navigate = useNavigate();
   const bigMatch = useMatch(`/${menuName}/${listType}/:id`);
   const onOverlayClicked = () => {
-    console.log("onOverlayClicked", menuName);
     if (menuName === "home") menuName = "";
     navigate(`/${menuName}`);
   };
 
-  const { data, isLoading } = useQuery<IDetailInfo>(
-    [listType + bigMatch?.params.id, "detail" + bigMatch?.params.id],
-    () => getDetailData(listType, menuName, +bigMatch?.params.id!) || null
+  const { data } = useQuery<IDetailInfo>(
+    [listType + dataId, "detail" + dataId],
+    () => getDetailData(listType, menuName, dataId) || null
   );
 
   return (
-    <AnimatePresence>
-      {bigMatch && data && !isLoading ? (
-        <>
-          <Overlay
-            onClick={onOverlayClicked}
-            exit={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-          />
-          <BigMovie layoutId={bigMatch.params.id + listType}>
-            {
-              <>
-                <BigCover
-                  style={{
-                    backgroundImage: `linear-gradient(to top, black, transparent),url(${makeImagePath(
-                      data?.backdrop_path || "",
-                      "w500"
-                    )})`,
-                  }}
-                />
-                <BigTitle>{data?.title ? data?.title : data?.name}</BigTitle>
-                <BigOverView>{data?.overview}</BigOverView>
-              </>
-            }
-          </BigMovie>
-        </>
-      ) : null}
-    </AnimatePresence>
+    <>
+      <Overlay
+        onClick={onOverlayClicked}
+        exit={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+      />
+      <BigMovie layoutId={bigMatch?.params.id + listType}>
+        {
+          <>
+            <BigCover
+              style={{
+                backgroundImage: `linear-gradient(to top, black, transparent),url(${makeImagePath(
+                  data?.backdrop_path || "",
+                  "w500"
+                )})`,
+              }}
+            />
+            <BigTitle>{data?.title ? data?.title : data?.name}</BigTitle>
+            <BigOverView>{data?.overview}</BigOverView>
+          </>
+        }
+      </BigMovie>
+    </>
   );
 }
