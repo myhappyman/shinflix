@@ -28,7 +28,6 @@ function Tv() {
       getPopularTvShows
     );
 
-  console.log(tvShowList?.results[0]);
   return (
     <Wrapper>
       {tvShowLoading ? (
