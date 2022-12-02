@@ -4,6 +4,7 @@ import { useMatch, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { getDetailData, IDetailInfo } from "../../api";
 import { makeImagePath } from "../../utils";
+import ReactStars from "react-stars";
 
 const Overlay = styled(motion.div)`
   position: fixed;
@@ -15,7 +16,7 @@ const Overlay = styled(motion.div)`
   z-index: 99;
 `;
 
-const BigMovie = styled(motion.div)`
+const ModalBox = styled(motion.div)`
   position: fixed;
   width: 40vw;
   height: 80vh;
@@ -29,26 +30,51 @@ const BigMovie = styled(motion.div)`
   z-index: 100;
 `;
 
-const BigCover = styled.div`
+const ModalCover = styled.div`
   width: 100%;
   background-size: cover;
   background-position: center center;
   height: 400px;
 `;
 
-const BigTitle = styled.h3`
+const ModalTitle = styled.h3`
   color: ${(props) => props.theme.white.lighter};
   padding: 20px;
   font-size: 46px;
   position: relative;
-  top: -80px;
+  top: -100px;
 `;
 
-const BigOverView = styled.p`
-  padding: 20px;
+const ModalCategory = styled.ul`
   position: relative;
-  top: -80px;
+  top: -100px;
+  padding: 20px;
   color: ${(props) => props.theme.white.lighter};
+`;
+
+const ModalItem = styled.li`
+  margin-bottom: 20px;
+`;
+
+const ItemTitle = styled.span`
+  width: 100px;
+  font-size: 18px;
+  font-weight: 700;
+  margin-right: 10px;
+  float: left;
+`;
+const ItemValue = styled.div`
+  font-size: 16px;
+  .rating {
+    top: -4px;
+    float: left;
+    margin-right: 5px;
+  }
+`;
+
+const ModalOverView = styled.p`
+  margin-bottom: 50px;
+  font-size: 14px;
 `;
 
 interface IModal {
@@ -59,7 +85,7 @@ interface IModal {
 
 export default function Modal({ dataId, listType, menuName }: IModal) {
   const navigate = useNavigate();
-  const bigMatch = useMatch(`/${menuName}/${listType}/:id`);
+  const modalMatch = useMatch(`/${menuName}/${listType}/:id`);
   const onOverlayClicked = () => {
     if (menuName === "home") menuName = "";
     navigate(`/${menuName}`);
@@ -69,6 +95,14 @@ export default function Modal({ dataId, listType, menuName }: IModal) {
     [listType + dataId, "detail" + dataId],
     () => getDetailData(listType, menuName, dataId) || null
   );
+  console.log(data);
+  const hourMinSec = (time: number) => {
+    if (time > 60) {
+      return `${Math.floor(time / 60)}시간 ${time % 60}분`;
+    } else {
+      return time + "분";
+    }
+  };
 
   return (
     <>
@@ -77,10 +111,10 @@ export default function Modal({ dataId, listType, menuName }: IModal) {
         exit={{ opacity: 0 }}
         animate={{ opacity: 1 }}
       />
-      <BigMovie layoutId={bigMatch?.params.id + listType}>
+      <ModalBox layoutId={modalMatch?.params.id + listType}>
         {
           <>
-            <BigCover
+            <ModalCover
               style={{
                 backgroundImage: `linear-gradient(to top, black, transparent),url(${makeImagePath(
                   data?.backdrop_path || "",
@@ -88,11 +122,54 @@ export default function Modal({ dataId, listType, menuName }: IModal) {
                 )})`,
               }}
             />
-            <BigTitle>{data?.title ? data?.title : data?.name}</BigTitle>
-            <BigOverView>{data?.overview}</BigOverView>
+            <ModalTitle>{data?.title ? data?.title : data?.name}</ModalTitle>
+            <ModalCategory>
+              <ModalItem>
+                <ModalOverView title={data?.overview}>
+                  {data && data?.overview.length > 390
+                    ? data?.overview.slice(0, 390) + "..."
+                    : data?.overview}
+                </ModalOverView>
+              </ModalItem>
+              <ModalItem>
+                <ItemTitle>평점 </ItemTitle>
+                <ItemValue>
+                  <ReactStars
+                    count={5}
+                    value={data?.vote_average ? data?.vote_average / 2 : 0}
+                    color1="#E6E6E6"
+                    color2="#FFCC33"
+                    half
+                    size={20}
+                    edit={false}
+                    className="rating"
+                  />
+                  <span>({data?.vote_average.toFixed(1)})</span>
+                </ItemValue>
+              </ModalItem>
+
+              <ModalItem>
+                <ItemTitle>장르</ItemTitle>
+                <ItemValue>
+                  {data?.genres.map((g, idx) =>
+                    data?.genres.length === idx + 1 ? (
+                      <span key={g.id}>{g.name}</span>
+                    ) : (
+                      <span key={g.id}>{g.name}, </span>
+                    )
+                  )}
+                </ItemValue>
+              </ModalItem>
+              {data?.runtime ? (
+                <ModalItem>
+                  <ItemTitle>상영시간</ItemTitle>
+                  <ItemValue>{hourMinSec(data?.runtime)}</ItemValue>
+                </ModalItem>
+              ) : null}
+            </ModalCategory>
           </>
         }
-      </BigMovie>
+      </ModalBox>
     </>
   );
 }

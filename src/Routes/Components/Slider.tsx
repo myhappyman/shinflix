@@ -146,7 +146,6 @@ export default function Sliders({ data, title, listType, menuName }: ISlider) {
       const totalLength = data.results.length;
       //20개 리스트에서 18개만 보여주기 위해 floor처리
       const maxIndex = Math.floor(totalLength / OFFSET);
-      console.log(data);
       right === 1
         ? setIndex((prev) => (prev === maxIndex ? 0 : prev + 1))
         : setIndex((prev) => (prev === 0 ? maxIndex : prev - 1));
