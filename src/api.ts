@@ -93,3 +93,23 @@ export function getDetailData(
     (response) => response.json()
   );
 }
+
+export interface IGetSearchResult {
+  page: number;
+  results: ISearch[]; // 영화 데이터 interface의 []
+  total_pages: number;
+  total_results: number;
+}
+interface ISearch {
+  id: number;
+  overview: string;
+  title?: string;
+  name?: string;
+  poster_path?: string;
+  backdrop_path?: string;
+}
+export function searchData(keyword: string) {
+  return fetch(`${BASE_PATH}/search/multi?${TAIL_PATH}&query=${keyword}`).then(
+    (response) => response.json()
+  );
+}

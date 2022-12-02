@@ -95,7 +95,7 @@ export default function Modal({ dataId, listType, menuName }: IModal) {
     [listType + dataId, "detail" + dataId],
     () => getDetailData(listType, menuName, dataId) || null
   );
-  console.log(data);
+
   const hourMinSec = (time: number) => {
     if (time > 60) {
       return `${Math.floor(time / 60)}시간 ${time % 60}분`;
