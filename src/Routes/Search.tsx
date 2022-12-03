@@ -145,7 +145,7 @@ function Search() {
         </SearchForm>
       </LeftWrap>
       <RightWrap>
-        {data && data.results.length > 0 ? (
+        {keyword && data && data.results.length > 0 ? (
           <Row>
             {data?.results.map((d) => (
               <Box
