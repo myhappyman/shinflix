@@ -131,7 +131,7 @@ function Search() {
     () => searchData(keyword || "")
   );
   const { register, handleSubmit, setValue } = useForm<ISearchForm>();
-  console.log(data);
+  
   setValue("searchKeyword", keyword || "");
   const onValid = (data: ISearchForm) => {
     navigate(`/search?keyword=${data.searchKeyword}`);
