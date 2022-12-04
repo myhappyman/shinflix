@@ -109,7 +109,7 @@ interface ISearch {
   backdrop_path?: string;
 }
 export function searchData(keyword: string) {
-  return fetch(`${BASE_PATH}/search/multi?${TAIL_PATH}&query=${keyword}`).then(
-    (response) => response.json()
-  );
+  return fetch(`${BASE_PATH}/search/multi?${TAIL_PATH}&query=${keyword}`)
+    .then((response) => response.json())
+    .catch((err) => err);
 }
