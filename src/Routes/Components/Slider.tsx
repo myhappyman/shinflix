@@ -10,6 +10,9 @@ const Wrapper = styled.div`
   position: relative;
   height: 239px;
   margin-top: 30px;
+  :hover .arrow {
+    opacity: 1;
+  }
 `;
 
 const Title = styled.div`
@@ -21,16 +24,20 @@ const Title = styled.div`
 
 const ArrowBtn = styled(motion.div)`
   position: absolute;
-  bottom: 0px;
-  width: 30px;
-  height: 200px;
+  top: 58%;
+  transform: translateY(-50%);
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
   background-color: rgba(0, 0, 0, 0.5);
-  z-index: 99;
   display: flex;
   justify-content: center;
   align-items: center;
   color: #fff;
-  opacity: 1;
+  z-index: 90;
+  opacity: 0;
+  cursor: pointer;
+  transition: all 0.3s;
 `;
 
 const LeftArrowBtn = styled(ArrowBtn)`
@@ -161,8 +168,6 @@ export default function Sliders({
 
   const navigate = useNavigate();
   const onBoxClicked = (menu: string, type: string, id: number) => {
-    console.log(menu);
-    console.log(type);
     navigate(`/${menu}/${type}/${id}`);
   };
 
@@ -173,10 +178,10 @@ export default function Sliders({
   return (
     <Wrapper>
       <Title>{title}</Title>
-      <LeftArrowBtn onClick={() => changeIndex(-1)}>
+      <LeftArrowBtn className="arrow" onClick={() => changeIndex(-1)}>
         <span>&#60;</span>
       </LeftArrowBtn>
-      <RightArrowBtn onClick={() => changeIndex(1)}>
+      <RightArrowBtn className="arrow" onClick={() => changeIndex(1)}>
         <span>&#62;</span>
       </RightArrowBtn>
       <AnimatePresence

@@ -73,7 +73,6 @@ function Search() {
   };
 
   const bigMatch: PathMatch<string> | null = useMatch(`search/:menuName/:id`);
-  console.log("bigMatch", bigMatch);
 
   return (
     <Wrapper>
