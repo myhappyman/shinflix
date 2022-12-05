@@ -41,6 +41,7 @@ function Tv() {
               title={"POPULAR TV SHOWS"}
               listType={"tvShowList"}
               menuName={"tv"}
+              mediaType={"tv"}
             />
           </SliderArea>
         </>

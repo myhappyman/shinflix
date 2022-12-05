@@ -4,10 +4,10 @@ const REGION = "KR";
 const BASE_PATH = "https://api.themoviedb.org/3";
 const TAIL_PATH = `api_key=${API_KEY}&language=${LANGUAGE}&region=${REGION}`;
 export const LIST_TYPE = [
-  "nowPlayingMoviesList",
-  "upcomingList",
-  "popularMovieList",
-  "tvShowList",
+  "nowPlaying",
+  "upcomingMovies",
+  "popularMovies",
+  "tvShow",
 ]; // 영상 종류
 
 // 영화 데이터
@@ -76,20 +76,8 @@ export function getPopularTvShows() {
 }
 
 // Modal Popup getDetail Info Api
-export function getDetailData(
-  listType: string,
-  menuName: string,
-  movieId: number
-) {
-  if (menuName === "home") {
-    if (listType === LIST_TYPE[3]) {
-      menuName = "tv";
-    } else {
-      menuName = "movie";
-    }
-  }
-
-  return fetch(`${BASE_PATH}/${menuName}/${movieId}?${TAIL_PATH}`).then(
+export function getDetailData(requestUrl: string, movieId: number) {
+  return fetch(`${BASE_PATH}/${requestUrl}/${movieId}?${TAIL_PATH}`).then(
     (response) => response.json()
   );
 }
@@ -107,6 +95,7 @@ interface ISearch {
   name?: string;
   poster_path?: string;
   backdrop_path?: string;
+  media_type: string;
 }
 export function searchData(keyword: string) {
   return fetch(`${BASE_PATH}/search/multi?${TAIL_PATH}&query=${keyword}`)

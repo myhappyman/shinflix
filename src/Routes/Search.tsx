@@ -1,6 +1,13 @@
+import { AnimatePresence } from "framer-motion";
 import { useForm } from "react-hook-form";
-import { useLocation, useNavigate } from "react-router-dom";
+import {
+  PathMatch,
+  useLocation,
+  useMatch,
+  useNavigate,
+} from "react-router-dom";
 import styled from "styled-components";
+import Modal from "./Components/Modal";
 import SearchContent from "./SearchContent";
 
 const Wrapper = styled.div`
@@ -65,6 +72,9 @@ function Search() {
     navigate(`/search?keyword=${data.searchKeyword}`);
   };
 
+  const bigMatch: PathMatch<string> | null = useMatch(`search/:menuName/:id`);
+  console.log("bigMatch", bigMatch);
+
   return (
     <Wrapper>
       <LeftWrap>
@@ -74,6 +84,17 @@ function Search() {
         </SearchForm>
       </LeftWrap>
       <RightWrap>{keyword && <SearchContent keyword={keyword} />}</RightWrap>
+      <AnimatePresence>
+        {bigMatch ? (
+          <Modal
+            dataId={Number(bigMatch?.params.id)}
+            listType={bigMatch?.params.menuName || ""}
+            menuName={"search"}
+            requestUrl={bigMatch?.params.menuName || ""}
+            returnUrl={`/search?keyword=${keyword}`}
+          />
+        ) : null}
+      </AnimatePresence>
     </Wrapper>
   );
 }

@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { IGetSearchResult, searchData } from "../api";
 import { makeImagePath } from "../utils";
@@ -76,18 +77,25 @@ function SearchContent({ keyword }: { keyword: string }) {
     { useErrorBoundary: true }
   );
 
+  const navigate = useNavigate();
+  const onBoxClicked = (menuName: string, id: number) => {
+    navigate(`/search/${menuName}/${id}?keyword=${keyword}`);
+  };
+
   return (
     <>
       {data && data.results.length > 0 ? (
         <Row>
           {data?.results.map((d) => (
             <Box
+              layoutId={d.id + "" + d.media_type}
               key={d.id}
               variants={boxVariants}
               initial="normal"
               whileHover="hover"
               transition={{ type: "tween" }}
               bgphoto={makeImagePath(d.backdrop_path || "", "w500")}
+              onClick={() => onBoxClicked(d.media_type, d.id)}
             >
               <Info variants={infoVariants}>
                 <h4>{d.title ? d.title : d.name}</h4>

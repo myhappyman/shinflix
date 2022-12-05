@@ -128,9 +128,16 @@ interface ISlider {
   title: string;
   listType: string;
   menuName: string;
+  mediaType: string;
 }
 
-export default function Sliders({ data, title, listType, menuName }: ISlider) {
+export default function Sliders({
+  data,
+  title,
+  listType,
+  menuName,
+  mediaType,
+}: ISlider) {
   const OFFSET = 6; // 한번에 보여줄 영화 개수
   const [isRight, setIsRight] = useState(1); // left: -1, right: 1
   const [index, setIndex] = useState(0);
@@ -154,6 +161,8 @@ export default function Sliders({ data, title, listType, menuName }: ISlider) {
 
   const navigate = useNavigate();
   const onBoxClicked = (menu: string, type: string, id: number) => {
+    console.log(menu);
+    console.log(type);
     navigate(`/${menu}/${type}/${id}`);
   };
 
@@ -212,6 +221,7 @@ export default function Sliders({ data, title, listType, menuName }: ISlider) {
             dataId={Number(bigMatch?.params.id)}
             listType={listType}
             menuName={menuName}
+            requestUrl={mediaType}
           />
         ) : null}
       </AnimatePresence>

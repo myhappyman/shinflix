@@ -66,24 +66,28 @@ function Home() {
               data={nowPlayingMoviesList as IGetDataResult}
               title={"NOW PLAYING"}
               listType={LIST_TYPE[0]}
+              mediaType={"movie"}
               menuName={"home"}
             />
             <Sliders
               data={upcomingMoviesList as IGetDataResult}
               title={"UPCOMING MOVIES"}
               listType={LIST_TYPE[1]}
+              mediaType={"movie"}
               menuName={"home"}
             />
             <Sliders
               data={popularMoviesList as IGetDataResult}
               title={"POPULAR MOVIES"}
               listType={LIST_TYPE[2]}
+              mediaType={"movie"}
               menuName={"home"}
             />
             <Sliders
               data={tvShowList as IGetDataResult}
               title={"POPULAR TV SHOWS"}
               listType={LIST_TYPE[3]}
+              mediaType={"tv"}
               menuName={"home"}
             />
           </SliderArea>

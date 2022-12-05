@@ -81,19 +81,31 @@ interface IModal {
   dataId: number;
   listType: string;
   menuName: string;
+  requestUrl: string;
+  returnUrl?: string;
 }
 
-export default function Modal({ dataId, listType, menuName }: IModal) {
+export default function Modal({
+  dataId,
+  listType,
+  menuName,
+  requestUrl,
+  returnUrl,
+}: IModal) {
   const navigate = useNavigate();
   const modalMatch = useMatch(`/${menuName}/${listType}/:id`);
   const onOverlayClicked = () => {
     if (menuName === "home") menuName = "";
-    navigate(`/${menuName}`);
-  };
 
+    if (returnUrl) {
+      navigate(returnUrl);
+    } else {
+      navigate(`/${menuName}`);
+    }
+  };
   const { data } = useQuery<IDetailInfo>(
     [listType + dataId, "detail" + dataId],
-    () => getDetailData(listType, menuName, dataId) || null
+    () => getDetailData(requestUrl, dataId) || null
   );
 
   const hourMinSec = (time: number) => {
