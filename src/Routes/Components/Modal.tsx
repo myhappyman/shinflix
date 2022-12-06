@@ -63,6 +63,7 @@ const ItemTitle = styled.span`
   margin-right: 10px;
   float: left;
 `;
+
 const ItemValue = styled.div`
   font-size: 16px;
   .rating {
@@ -70,6 +71,18 @@ const ItemValue = styled.div`
     float: left;
     margin-right: 5px;
   }
+  .channel {
+    float: left;
+    height: 20px;
+  }
+  .channel ~ .channel {
+    margin-left: 20px;
+  }
+`;
+
+const Clear = styled.div`
+  clear: both;
+  margin-bottom: 20px;
 `;
 
 const ModalOverView = styled.p`
@@ -103,6 +116,7 @@ export default function Modal({
       navigate(`/${menuName}`);
     }
   };
+
   const { data } = useQuery<IDetailInfo>(
     [listType + dataId, "detail" + dataId],
     () => getDetailData(requestUrl, dataId) || null
@@ -136,6 +150,7 @@ export default function Modal({
             />
             <ModalTitle>{data?.title ? data?.title : data?.name}</ModalTitle>
             <ModalCategory>
+              {/* 줄거리 */}
               <ModalItem>
                 <ModalOverView title={data?.overview}>
                   {data && data?.overview.length > 390
@@ -143,6 +158,41 @@ export default function Modal({
                     : data?.overview}
                 </ModalOverView>
               </ModalItem>
+
+              {/* 영화 - 개봉일, tv - 편성일 */}
+              {data?.release_date ? (
+                <ModalItem>
+                  <ItemTitle>개봉일 </ItemTitle>
+                  <ItemValue>{data?.release_date}</ItemValue>
+                </ModalItem>
+              ) : (
+                <ModalItem>
+                  <ItemTitle>편성 </ItemTitle>
+                  <ItemValue>{data?.first_air_date}</ItemValue>
+                </ModalItem>
+              )}
+
+              {/* tv - 송출 방송사 및 vod사 */}
+              {data?.networks && data?.networks.length > 0 ? (
+                <>
+                  <ModalItem>
+                    <ItemTitle>채널 </ItemTitle>
+                    <ItemValue>
+                      {data?.networks.map((n) => (
+                        <img
+                          className="channel"
+                          key={n.id}
+                          alt={n.name}
+                          src={makeImagePath(n.logo_path || "")}
+                        />
+                      ))}
+                    </ItemValue>
+                  </ModalItem>
+                  <Clear />
+                </>
+              ) : null}
+
+              {/* 평점 */}
               <ModalItem>
                 <ItemTitle>평점 </ItemTitle>
                 <ItemValue>
@@ -160,18 +210,23 @@ export default function Modal({
                 </ItemValue>
               </ModalItem>
 
-              <ModalItem>
-                <ItemTitle>장르</ItemTitle>
-                <ItemValue>
-                  {data?.genres.map((g, idx) =>
-                    data?.genres.length === idx + 1 ? (
-                      <span key={g.id}>{g.name}</span>
-                    ) : (
-                      <span key={g.id}>{g.name}, </span>
-                    )
-                  )}
-                </ItemValue>
-              </ModalItem>
+              {/* 장르 */}
+              {data?.genres && data?.genres.length > 0 ? (
+                <ModalItem>
+                  <ItemTitle>장르</ItemTitle>
+                  <ItemValue>
+                    {data?.genres.map((g, idx) =>
+                      data?.genres.length === idx + 1 ? (
+                        <span key={g.id}>{g.name}</span>
+                      ) : (
+                        <span key={g.id}>{g.name}, </span>
+                      )
+                    )}
+                  </ItemValue>
+                </ModalItem>
+              ) : null}
+
+              {/* 영화 - 상영시간 */}
               {data?.runtime ? (
                 <ModalItem>
                   <ItemTitle>상영시간</ItemTitle>

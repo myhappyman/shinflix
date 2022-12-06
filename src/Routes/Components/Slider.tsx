@@ -38,6 +38,10 @@ const ArrowBtn = styled(motion.div)`
   opacity: 0;
   cursor: pointer;
   transition: all 0.3s;
+  &:hover {
+    color: #000;
+    background-color: #fff;
+  }
 `;
 
 const LeftArrowBtn = styled(ArrowBtn)`

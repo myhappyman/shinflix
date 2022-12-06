@@ -36,6 +36,12 @@ interface IGenre {
   id: number;
   name: string;
 }
+interface INetworks {
+  id: number;
+  name: string;
+  logo_path: string;
+  origin_country: string;
+}
 export interface IDetailInfo {
   id: number;
   overview: string;
@@ -45,6 +51,9 @@ export interface IDetailInfo {
   runtime: number;
   backdrop_path: string;
   genres: IGenre[];
+  release_date?: string;
+  first_air_date?: string;
+  networks: INetworks[];
 }
 
 // Movies - NowPlaying
