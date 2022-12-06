@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import styled from "styled-components";
-import { getPopularTvShows, IData, IGetDataResult } from "../api";
+import { getPopularTvShows, IData, IGetDataResult, LIST_TYPE } from "../api";
 import Banner from "./Components/Banner";
 import Sliders from "./Components/Slider";
 
@@ -34,7 +34,11 @@ function Tv() {
         <Loader>Loading...</Loader>
       ) : (
         <>
-          <Banner bannerInfo={tvShowList?.results[0] as IData} />
+          <Banner
+            bannerInfo={tvShowList?.results[0] as IData}
+            detailSearchUrl={`tv/banner`}
+            requestUrl={"tv"}
+          />
           <SliderArea>
             <Sliders
               data={tvShowList as IGetDataResult}

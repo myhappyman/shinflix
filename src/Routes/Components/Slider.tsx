@@ -5,6 +5,7 @@ import { IGetDataResult } from "../../api";
 import { makeImagePath } from "../../utils";
 import { PathMatch, useMatch, useNavigate } from "react-router-dom";
 import Modal from "./Modal";
+import { AiOutlineLeft, AiOutlineRight } from "react-icons/ai";
 
 const Wrapper = styled.div`
   position: relative;
@@ -36,11 +37,15 @@ const ArrowBtn = styled(motion.div)`
   color: #fff;
   z-index: 90;
   opacity: 0;
-  cursor: pointer;
   transition: all 0.3s;
+  cursor: pointer;
   &:hover {
     color: #000;
     background-color: #fff;
+  }
+  svg {
+    width: 28px;
+    height: 28px;
   }
 `;
 
@@ -183,10 +188,10 @@ export default function Sliders({
     <Wrapper>
       <Title>{title}</Title>
       <LeftArrowBtn className="arrow" onClick={() => changeIndex(-1)}>
-        <span>&#60;</span>
+        <AiOutlineLeft />
       </LeftArrowBtn>
       <RightArrowBtn className="arrow" onClick={() => changeIndex(1)}>
-        <span>&#62;</span>
+        <AiOutlineRight />
       </RightArrowBtn>
       <AnimatePresence
         initial={false}

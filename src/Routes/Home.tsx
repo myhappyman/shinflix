@@ -60,7 +60,11 @@ function Home() {
         <Loader>Loading...</Loader>
       ) : (
         <>
-          <Banner bannerInfo={nowPlayingMoviesList?.results[0] as IData} />
+          <Banner
+            bannerInfo={nowPlayingMoviesList?.results[0] as IData}
+            detailSearchUrl={`home/banner`}
+            requestUrl={"movie"}
+          />
           <SliderArea>
             <Sliders
               data={nowPlayingMoviesList as IGetDataResult}

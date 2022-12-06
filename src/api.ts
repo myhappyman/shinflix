@@ -86,6 +86,7 @@ export function getPopularTvShows() {
 
 // Modal Popup getDetail Info Api
 export function getDetailData(requestUrl: string, movieId: number) {
+  console.log("requestUrlrequestUrlrequestUrlrequestUrl", requestUrl);
   return fetch(`${BASE_PATH}/${requestUrl}/${movieId}?${TAIL_PATH}`).then(
     (response) => response.json()
   );

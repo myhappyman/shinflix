@@ -115,6 +115,16 @@ function Header() {
   const inputAnimation = useAnimation();
   const { scrollY } = useScroll();
 
+  useEffect(() => {
+    scrollY.onChange(() => {
+      if (scrollY.get() > 80) {
+        navAnimation.start("scroll");
+      } else {
+        navAnimation.start("top");
+      }
+    });
+  }, [scrollY]);
+
   const toggleSearch = () => {
     if (searchOpen) {
       //trigger the close animation
@@ -130,20 +140,12 @@ function Header() {
     setSearchOpen((prev) => !prev);
   };
 
-  useEffect(() => {
-    scrollY.onChange(() => {
-      if (scrollY.get() > 80) {
-        navAnimation.start("scroll");
-      } else {
-        navAnimation.start("top");
-      }
-    });
-  }, [scrollY]);
   const navigate = useNavigate();
   const { register, handleSubmit } = useForm<IForm>();
   const onValid = (data: IForm) => {
     navigate(`/search?keyword=${data.keyword}`);
   };
+
   return (
     <Nav variants={navVariants} animate={navAnimation} initial="top">
       <Col>

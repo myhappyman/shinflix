@@ -12,9 +12,11 @@ function App() {
         <Route path="/search" element={<Search />}></Route>
         <Route path="/search/:menuName/:id" element={<Search />}></Route>
         <Route path="/tv" element={<Tv />}></Route>
+        <Route path="/tv/banner/:id" element={<Tv />}></Route>
         <Route path="/tv/tvShowList/:id" element={<Tv />}></Route>
         <Route path="/" element={<Home />}></Route>
         <Route path="/home/:listType/:id" element={<Home />}></Route>
+        <Route path="/home/banner/:id" element={<Home />}></Route>
       </Routes>
     </Router>
   );

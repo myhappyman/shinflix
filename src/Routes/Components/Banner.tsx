@@ -2,6 +2,9 @@ import styled from "styled-components";
 import { IData } from "../../api";
 import { makeImagePath } from "../../utils";
 import { AiFillCaretRight, AiOutlineInfoCircle } from "react-icons/ai";
+import { PathMatch, useMatch, useNavigate } from "react-router-dom";
+import { AnimatePresence, motion } from "framer-motion";
+import Modal from "./Modal";
 
 const Wrapper = styled.div<{ bgphoto: string }>`
   height: 100vh;
@@ -36,22 +39,24 @@ const ButtonArea = styled.div`
 interface IBannerBtn {
   width: string;
   color: string;
-  bgColor: string;
-  hoverColor: string;
+  bgcolor: string;
+  hovercolor: string;
 }
 
-const BannerBtn = styled.button<IBannerBtn>`
+const BannerBtn = styled(motion.button)<IBannerBtn>`
   width: ${(props) => props.width};
   padding: 18px;
   border-radius: 15px;
+  border: none;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   color: ${(props) => props.color};
-  background-color: ${(props) => props.bgColor};
+  background-color: ${(props) => props.bgcolor};
+  transition: all 0.3s;
   &:hover {
-    background-color: ${(props) => props.hoverColor};
+    background-color: ${(props) => props.hovercolor};
   }
 `;
 
@@ -67,11 +72,27 @@ const BtnICon = styled.div`
   }
 `;
 
-const BtnText = styled.div`
+const BtnText = styled(motion.div)`
   font-size: 28px;
   font-weight: 400;
 `;
-function Banner({ bannerInfo }: { bannerInfo: IData }) {
+
+function Banner({
+  bannerInfo,
+  detailSearchUrl,
+  requestUrl,
+}: {
+  bannerInfo: IData;
+  detailSearchUrl: string;
+  requestUrl: string;
+}) {
+  console.log("requestUrlrequestUrlrequestUrl", requestUrl);
+  const bigMatch: PathMatch<string> | null = useMatch(`/:menuName/banner/:id`);
+  const navigate = useNavigate();
+  const onBoxClicked = (id: number) => {
+    navigate(`/${detailSearchUrl}/${id}`);
+  };
+
   return (
     <Wrapper bgphoto={makeImagePath(bannerInfo.backdrop_path || "")}>
       <Title>{bannerInfo.title ? bannerInfo.title : bannerInfo.name}</Title>
@@ -80,8 +101,8 @@ function Banner({ bannerInfo }: { bannerInfo: IData }) {
         <BannerBtn
           width={"170px"}
           color={"#000"}
-          bgColor={"rgba(255, 255, 255, 1)"}
-          hoverColor={"rgba(255, 255, 255, 0.75)"}
+          bgcolor={"rgba(255, 255, 255, 1)"}
+          hovercolor={"rgba(255, 255, 255, 0.75)"}
         >
           <BtnICon>
             <AiFillCaretRight />
@@ -91,8 +112,9 @@ function Banner({ bannerInfo }: { bannerInfo: IData }) {
         <BannerBtn
           width={"220px"}
           color={"#fff"}
-          bgColor={"rgba(109, 109, 110, 0.7)"}
-          hoverColor={"rgba(109, 109, 110, 0.4)"}
+          bgcolor={"rgba(109, 109, 110, 0.7)"}
+          hovercolor={"rgba(109, 109, 110, 0.4)"}
+          onClick={() => onBoxClicked(bannerInfo.id)}
         >
           <BtnICon>
             <AiOutlineInfoCircle />
@@ -100,6 +122,16 @@ function Banner({ bannerInfo }: { bannerInfo: IData }) {
           <BtnText>상세 정보</BtnText>
         </BannerBtn>
       </ButtonArea>
+      <AnimatePresence>
+        {bigMatch ? (
+          <Modal
+            dataId={Number(bigMatch?.params.id)}
+            listType={"coverMovie"}
+            menuName={bigMatch?.params.menuName || ""}
+            requestUrl={requestUrl}
+          />
+        ) : null}
+      </AnimatePresence>
     </Wrapper>
   );
 }
