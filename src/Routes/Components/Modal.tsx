@@ -28,6 +28,10 @@ const ModalBox = styled(motion.div)`
   overflow: hidden;
   background-color: ${(props) => props.theme.black.lighter};
   z-index: 100;
+
+  @media only screen and (max-width: 500px) {
+    width: 90vw;
+  }
 `;
 
 const ModalCover = styled.div`

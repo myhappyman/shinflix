@@ -1,11 +1,13 @@
-import { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { AnimatePresence, motion, useScroll } from "framer-motion";
 import styled from "styled-components";
 import { IGetDataResult } from "../../api";
 import { makeImagePath } from "../../utils";
 import { PathMatch, useMatch, useNavigate } from "react-router-dom";
 import Modal from "./Modal";
 import { AiOutlineLeft, AiOutlineRight } from "react-icons/ai";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { windowWidth } from "../../atoms";
 
 const Wrapper = styled.div`
   position: relative;
@@ -57,10 +59,10 @@ const RightArrowBtn = styled(ArrowBtn)`
   right: 0;
 `;
 
-const Row = styled(motion.div)`
+const Row = styled(motion.div)<{ gridcnt: number }>`
   display: grid;
   gap: 5px;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(${(props) => props.gridcnt}, 1fr);
   margin-bottom: 30px;
   width: 100%;
   position: absolute;
@@ -99,7 +101,7 @@ const Info = styled(motion.div)`
 const rowVariants = {
   hidden: (right: number) => {
     return {
-      x: right === 1 ? window.innerWidth : -window.innerWidth,
+      x: right === 1 ? window.innerWidth + 5 : -window.innerWidth - 5,
     };
   },
   visible: {
@@ -108,7 +110,7 @@ const rowVariants = {
   },
   exit: (right: number) => {
     return {
-      x: right === 1 ? -window.innerWidth : window.innerWidth,
+      x: right === 1 ? -window.innerWidth - 5 : window.innerWidth + 5,
     };
   },
 };
@@ -154,7 +156,15 @@ export default function Sliders({
   menuName,
   mediaType,
 }: ISlider) {
-  const OFFSET = 6; // 한번에 보여줄 영화 개수
+  const width = useRecoilValue(windowWidth);
+  const [offset, setOffset] = useState(window.innerWidth < 501 ? 3 : 6); // Slide 보여줄 개수
+  useEffect(() => {
+    if (width < 501) {
+      setOffset(3);
+    } else {
+      setOffset(6);
+    }
+  }, [width]);
   const [isRight, setIsRight] = useState(1); // left: -1, right: 1
   const [index, setIndex] = useState(0);
   const [leaving, setLeaving] = useState(false);
@@ -168,7 +178,7 @@ export default function Sliders({
       setIsRight(right);
       const totalLength = data.results.length;
       //20개 리스트에서 18개만 보여주기 위해 floor처리
-      const maxIndex = Math.floor(totalLength / OFFSET);
+      const maxIndex = Math.floor(totalLength / offset);
       right === 1
         ? setIndex((prev) => (prev === maxIndex ? 0 : prev + 1))
         : setIndex((prev) => (prev === 0 ? maxIndex : prev - 1));
@@ -199,6 +209,7 @@ export default function Sliders({
         custom={isRight}
       >
         <Row
+          gridcnt={offset}
           custom={isRight}
           variants={rowVariants}
           initial="hidden"
@@ -208,7 +219,7 @@ export default function Sliders({
           key={index}
         >
           {data?.results
-            .slice(OFFSET * index, OFFSET * index + OFFSET)
+            .slice(offset * index, offset * index + offset)
             .map((d) => (
               <Box
                 key={d.id}

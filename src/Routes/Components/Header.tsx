@@ -15,6 +15,10 @@ const Nav = styled(motion.nav)`
   padding: 20px 60px;
   color: #fff;
   z-index: 98;
+
+  @media only screen and (max-width: 500px) {
+    padding: 10px 30px;
+  }
 `;
 
 const Col = styled.div`
@@ -30,6 +34,10 @@ const Logo = styled(motion.svg)`
   path {
     stroke-width: 6px;
     stroke: white;
+  }
+
+  @media only screen and (max-width: 500px) {
+    margin-right: 20px;
   }
 `;
 
@@ -83,6 +91,11 @@ const Input = styled(motion.input)`
   font-size: 16px;
   background-color: transparent;
   border: 1px solid ${(props) => props.theme.white.lighter};
+
+  @media only screen and (max-width: 500px) {
+    padding: 5px 0;
+    font-size: 14px;
+  }
 `;
 
 const logoVariants = {
