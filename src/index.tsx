@@ -13,6 +13,31 @@ const GlobalStyle = createGlobalStyle`
   */
   @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300&display=swap');
 
+  /* REM rules */
+  html{font-size:3px !important;}
+  @media screen and (min-width:216px){html{font-size:3.5px !important;}}
+  @media screen and (min-width:229px){html{font-size:3.8px !important;}}
+  @media screen and (min-width:250px){html{font-size:4.2px !important;}}
+  @media screen and (min-width:252px){html{font-size:4.5px !important;}}
+  @media screen and (min-width:288px){html{font-size:4.8px !important;}}
+  @media screen and (min-width:300px){html{font-size:5px !important;}}
+  /* iphone 5 */
+  @media screen and (min-width:320px){html{font-size:6px !important;}}
+  @media screen and (min-width:360px){html{font-size:7px !important;}}
+  @media screen and (min-width:396px){html{font-size:8px !important;}}
+  @media screen and (min-width:432px){html{font-size:8.4px !important;}}
+  @media screen and (min-width:460px){html{font-size:8.8px !important;}}
+  @media screen and (min-width:504px){html{font-size:9.2px !important;}}
+  @media screen and (min-width:540px){html{font-size:9.5px !important;}}
+  @media screen and (min-width:576px){html{font-size:9.8px !important;}}
+  @media screen and (min-width:600px){html{font-size:10px !important;}}
+  @media screen and (min-width:820px){html{font-size:10px !important;}}
+
+  body {font-size:1rem !important;}
+
+  * {
+    box-sizing: border-box;
+  }
   html, body, div, span, applet, object, iframe,
   h1, h2, h3, h4, h5, h6, p, blockquote, pre,
   a, abbr, acronym, address, big, cite, code,
@@ -29,7 +54,6 @@ const GlobalStyle = createGlobalStyle`
     margin: 0;
     padding: 0;
     border: 0;
-    font-size: 100%;
     font: inherit;
     vertical-align: baseline;
   }
@@ -37,10 +61,7 @@ const GlobalStyle = createGlobalStyle`
   article, aside, details, figcaption, figure, 
   footer, header, hgroup, menu, nav, section {
     display: block;
-  }
-  body {
-    line-height: 1;
-  }
+  }  
   ol, ul {
     list-style: none;
   }
@@ -55,10 +76,7 @@ const GlobalStyle = createGlobalStyle`
   table {
     border-collapse: collapse;
     border-spacing: 0;
-  }
-  *{
-    box-sizing: border-box;
-  }
+  }  
   body {
     font-weight: 300;
     font-family: 'Source Sans Pro', sans-serif;
@@ -82,7 +100,6 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 const client = new QueryClient();
-
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );

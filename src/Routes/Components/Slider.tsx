@@ -11,26 +11,26 @@ import { windowWidth } from "../../atoms";
 
 const Wrapper = styled.div`
   position: relative;
-  height: 239px;
-  margin-top: 30px;
+  height: 23.9rem;
+  margin-top: 3rem;
   :hover .arrow {
     opacity: 1;
   }
 `;
 
 const Title = styled.div`
-  font-size: 24px;
-  padding-left: 20px;
+  font-size: 2.4rem;
+  padding-left: 2rem;
   font-weight: 700;
-  padding-bottom: 10px;
+  padding-bottom: 1rem;
 `;
 
 const ArrowBtn = styled(motion.div)`
   position: absolute;
   top: 58%;
   transform: translateY(-50%);
-  width: 60px;
-  height: 60px;
+  width: 6rem;
+  height: 6rem;
   border-radius: 50%;
   background-color: rgba(0, 0, 0, 0.5);
   display: flex;
@@ -46,8 +46,8 @@ const ArrowBtn = styled(motion.div)`
     background-color: #fff;
   }
   svg {
-    width: 28px;
-    height: 28px;
+    width: 2.8rem;
+    height: 2.8rem;
   }
 `;
 
@@ -60,22 +60,31 @@ const RightArrowBtn = styled(ArrowBtn)`
 `;
 
 const Row = styled(motion.div)<{ gridcnt: number }>`
-  display: grid;
-  gap: 5px;
-  grid-template-columns: repeat(${(props) => props.gridcnt}, 1fr);
-  margin-bottom: 30px;
-  width: 100%;
   position: absolute;
   left: 0;
+  /* display: grid;
+  gap: 5px;
+  grid-template-columns: repeat(${(props) => props.gridcnt}, 1fr); */
+  margin-bottom: 3rem;
+  width: 100%;
+  clear: both;
+  &:after {
+    content: "";
+    display: block;
+    clear: both;
+  }
 `;
 
-const Box = styled(motion.div)<{ bgphoto: string }>`
+const Box = styled(motion.div)<{ bgphoto: string; offset: number }>`
   background-color: #fff;
-  height: 200px;
+  display: block;
+  float: left;
+  width: calc(100% / ${(props) => props.offset} - 5px);
+  height: 16rem;
   background-image: url(${(props) => props.bgphoto});
   background-size: cover;
   background-position: center;
-  font-size: 40px;
+  font-size: 4rem;
   cursor: pointer;
   &:first-child {
     transform-origin: center left;
@@ -83,18 +92,28 @@ const Box = styled(motion.div)<{ bgphoto: string }>`
   &:last-child {
     transform-origin: center right;
   }
+  & ~ & {
+    margin-left: 0.6rem;
+  }
+
+  @media only screen and (max-width: 800px) {
+    height: 13rem;
+  }
+  @media only screen and (max-width: 280px) {
+    height: 18rem;
+  }
 `;
 
 const Info = styled(motion.div)`
-  padding: 10px;
+  padding: 1rem;
   background-color: ${(props) => props.theme.black.lighter};
   opacity: 0;
   position: relative;
-  top: 158px;
+  top: 15.8rem;
   width: 100%;
   h4 {
     text-align: center;
-    font-size: 18px;
+    font-size: 1.8rem;
   }
 `;
 
@@ -157,14 +176,23 @@ export default function Sliders({
   mediaType,
 }: ISlider) {
   const width = useRecoilValue(windowWidth);
-  const [offset, setOffset] = useState(window.innerWidth < 501 ? 3 : 6); // Slide 보여줄 개수
-  useEffect(() => {
-    if (width < 501) {
-      setOffset(3);
-    } else {
+  const getOffset = () => {
+    if (width > 1400) {
       setOffset(6);
+    } else if (width > 1130) {
+      setOffset(5);
+    } else if (width > 900) {
+      setOffset(4);
+    } else if (width > 680) {
+      setOffset(3);
+    } else if (width > 250) {
+      setOffset(2);
+    } else {
+      setOffset(1);
     }
-  }, [width]);
+  };
+  const [offset, setOffset] = useState(6); // Slide 보여줄 개수
+  useEffect(() => getOffset, [width]);
   const [isRight, setIsRight] = useState(1); // left: -1, right: 1
   const [index, setIndex] = useState(0);
   const [leaving, setLeaving] = useState(false);
@@ -229,6 +257,7 @@ export default function Sliders({
                 transition={{ type: "tween" }}
                 layoutId={d.id + "" + listType}
                 bgphoto={makeImagePath(d.backdrop_path || "", "w500")}
+                offset={offset}
                 onClick={() => {
                   onBoxClicked(menuName, listType, d.id);
                 }}

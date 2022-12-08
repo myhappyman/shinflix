@@ -7,9 +7,9 @@ import { makeImagePath } from "../utils";
 
 const Row = styled.div`
   display: grid;
-  gap: 5px;
+  gap: 0.5rem;
   grid-template-columns: repeat(6, 1fr);
-  margin-bottom: 30px;
+  margin-bottom: 3rem;
   width: 100%;
   position: absolute;
   left: 0;
@@ -17,11 +17,11 @@ const Row = styled.div`
 
 const Box = styled(motion.div)<{ bgphoto: string }>`
   background-color: #fff;
-  height: 200px;
+  height: 20rem;
   background-image: url(${(props) => props.bgphoto});
   background-size: cover;
   background-position: center;
-  font-size: 40px;
+  font-size: 4rem;
   cursor: pointer;
   &:first-child {
     transform-origin: center left;
@@ -32,15 +32,15 @@ const Box = styled(motion.div)<{ bgphoto: string }>`
 `;
 
 const Info = styled(motion.div)`
-  padding: 10px;
+  padding: 1rem;
   background-color: ${(props) => props.theme.black.lighter};
   opacity: 0;
   position: relative;
-  top: 158px;
+  top: 15.8rem;
   width: 100%;
   h4 {
     text-align: center;
-    font-size: 18px;
+    font-size: 1.8rem;
   }
 `;
 

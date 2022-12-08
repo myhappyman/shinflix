@@ -14,41 +14,84 @@ const Wrapper = styled.div<{ bgphoto: string }>`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 60px;
+  padding: 6.8rem;
+  background-repeat: no-repeat;
   background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 1)),
     url(${(props) => props.bgphoto});
-  background-size: cover;
+  background-size: 100%;
+  background-position: center center;
+  /* background: no-repeat url() left/right/center top/bottom/center / cover, 100%,contain; */
 
-  @media only screen and (max-width: 500px) {
-    width: 100vw;
-    height: 100vh;
-    padding: 10px;
-    background-repeat: no-repeat;
-    background-size: cover;
+  @media screen and (max-width: 1500px) {
+    height: 95vh;
+  }
+  @media screen and (max-width: 1400px) {
+    height: 90vh;
+  }
+  @media screen and (max-width: 1300px) {
+    height: 85vh;
+  }
+  @media screen and (max-width: 1200px) {
+    height: 80vh;
+  }
+  @media screen and (max-width: 1100px) {
+    height: 70vh;
+  }
+  @media screen and (max-width: 1000px) {
+    height: 65vh;
+    padding: 4.2rem;
+  }
+  @media screen and (max-width: 500px) {
+    height: 50vh;
+    padding: 3.4rem;
+  }
+  @media screen and (min-width: 216px) {
+    background-position: center top;
+  }
+  @media screen and (min-width: 1680px) {
+    background-position: center center;
   }
 `;
 
 const Title = styled.h2`
-  font-size: 68px;
+  font-size: 4rem;
   font-weight: 900;
-  margin-bottom: 20px;
+  margin-bottom: 2rem;
 
-  @media only screen and (max-width: 500px) {
-    font-size: 32px;
+  @media only screen and (max-width: 1200px) {
+    font-size: 3.2rem;
+  }
+  @media only screen and (max-width: 700px) {
+    font-size: 2.6rem;
+  }
+  @media only screen and (max-width: 350px) {
+    margin: 0;
   }
 `;
 
 const Overview = styled.p`
-  width: 34%;
-  font-size: 18px;
+  width: 52.8rem;
+  font-size: 1.8rem;
   font-weight: 700;
-  margin-bottom: 20px;
-  line-height: 25px;
+  margin-bottom: 2rem;
+  line-height: 2.5rem;
 
-  @media only screen and (max-width: 500px) {
-    width: 100%;
-    font-size: 10px;
-    line-height: 12px;
+  @media only screen and (max-width: 1200px) {
+    width: 40rem;
+    font-size: 1.2rem;
+    line-height: 2rem;
+  }
+  @media only screen and (max-width: 700px) {
+    width: 34rem;
+    font-size: 1rem;
+    line-height: 1.8rem;
+  }
+  @media only screen and (max-width: 700px) {
+    font-size: 0.8rem;
+    line-height: 1.6rem;
+  }
+  @media only screen and (max-width: 350px) {
+    opacity: 0;
   }
 `;
 
@@ -58,16 +101,14 @@ const ButtonArea = styled.div`
 `;
 
 interface IBannerBtn {
-  width: string;
   color: string;
   bgcolor: string;
   hovercolor: string;
 }
 
 const BannerBtn = styled(motion.button)<IBannerBtn>`
-  width: ${(props) => props.width};
-  padding: 18px;
-  border-radius: 15px;
+  padding: 1.8rem;
+  border-radius: 1.5rem;
   border: none;
   cursor: pointer;
   display: flex;
@@ -80,34 +121,65 @@ const BannerBtn = styled(motion.button)<IBannerBtn>`
     background-color: ${(props) => props.hovercolor};
   }
 
-  @media only screen and (max-width: 500px) {
-    padding: 4px;
-    border-radius: 15px;
+  @media only screen and (max-width: 1200px) {
+    padding: 1.2rem;
+    border-radius: 1.5rem;
+  }
+  @media only screen and (max-width: 700px) {
+    padding: 0.6rem;
+    border-radius: 1.2rem;
+  }
+`;
+
+const PlayBtn = styled(BannerBtn)`
+  width: 17rem;
+  @media only screen and (max-width: 1000px) {
+    width: 14rem;
+  }
+`;
+const DetailInfoBtn = styled(BannerBtn)`
+  width: 22rem;
+  @media only screen and (max-width: 1000px) {
+    width: 18rem;
   }
 `;
 
 const BtnICon = styled.div`
-  width: 28px;
-  height: 28px;
+  width: 2.8rem;
+  height: 2.8rem;
   display: flex;
   align-items: center;
-  margin-right: 10px;
+  margin-right: 1rem;
   svg {
-    width: 28px;
-    height: 28px;
+    width: 2.8rem;
+    height: 2.8rem;
   }
-  @media only screen and (max-width: 500px) {
-    width: 14px;
-    height: 14px;
+  @media only screen and (max-width: 1200px) {
+    width: 2.4rem;
+    height: 2.4rem;
+  }
+  @media only screen and (max-width: 1000px) {
+    width: 2rem;
+    height: 2rem;
+  }
+  @media only screen and (max-width: 700px) {
+    width: 1.6rem;
+    height: 1.6rem;
   }
 `;
 
 const BtnText = styled(motion.div)`
-  font-size: 28px;
+  font-size: 2.8rem;
   font-weight: 400;
 
-  @media only screen and (max-width: 500px) {
-    font-size: 14px;
+  @media only screen and (max-width: 1200px) {
+    font-size: 2.4rem;
+  }
+  @media only screen and (max-width: 1000px) {
+    font-size: 2rem;
+  }
+  @media only screen and (max-width: 700px) {
+    font-size: 1.6rem;
   }
 `;
 
@@ -142,8 +214,7 @@ function Banner({
       <Title>{bannerInfo.title ? bannerInfo.title : bannerInfo.name}</Title>
       <Overview>{bannerInfo.overview}</Overview>
       <ButtonArea>
-        <BannerBtn
-          width={"170px"}
+        <PlayBtn
           color={"#000"}
           bgcolor={"rgba(255, 255, 255, 1)"}
           hovercolor={"rgba(255, 255, 255, 0.75)"}
@@ -152,9 +223,8 @@ function Banner({
             <AiFillCaretRight />
           </BtnICon>
           <BtnText>재생</BtnText>
-        </BannerBtn>
-        <BannerBtn
-          width={"220px"}
+        </PlayBtn>
+        <DetailInfoBtn
           color={"#fff"}
           bgcolor={"rgba(109, 109, 110, 0.7)"}
           hovercolor={"rgba(109, 109, 110, 0.4)"}
@@ -164,7 +234,7 @@ function Banner({
             <AiOutlineInfoCircle />
           </BtnICon>
           <BtnText>상세 정보</BtnText>
-        </BannerBtn>
+        </DetailInfoBtn>
       </ButtonArea>
       <AnimatePresence>
         {bigMatch ? (

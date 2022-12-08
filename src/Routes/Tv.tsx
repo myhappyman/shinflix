@@ -18,7 +18,7 @@ const Loader = styled.div`
 
 const SliderArea = styled.div`
   position: relative;
-  top: -130px;
+  top: -13rem;
 `;
 
 function Tv() {

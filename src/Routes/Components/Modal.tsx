@@ -9,8 +9,8 @@ import ReactStars from "react-stars";
 const Overlay = styled(motion.div)`
   position: fixed;
   top: 0;
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
   background-color: rgba(0, 0, 0, 0.5);
   opacity: 0;
   z-index: 99;
@@ -20,11 +20,11 @@ const ModalBox = styled(motion.div)`
   position: fixed;
   width: 40vw;
   height: 80vh;
-  top: 100px;
+  top: 10rem;
   left: 0;
   right: 0;
   margin: 0 auto;
-  border-radius: 15px;
+  border-radius: 1.5rem;
   overflow: hidden;
   background-color: ${(props) => props.theme.black.lighter};
   z-index: 100;
@@ -38,60 +38,60 @@ const ModalCover = styled.div`
   width: 100%;
   background-size: cover;
   background-position: center center;
-  height: 400px;
+  height: 40rem;
 `;
 
 const ModalTitle = styled.h3`
   color: ${(props) => props.theme.white.lighter};
-  padding: 20px;
-  font-size: 46px;
+  padding: 2rem;
+  font-size: 4.6rem;
   position: relative;
-  top: -100px;
+  top: -10rem;
 `;
 
 const ModalCategory = styled.ul`
   position: relative;
-  top: -100px;
-  padding: 20px;
+  top: -10rem;
+  padding: 2rem;
   color: ${(props) => props.theme.white.lighter};
 `;
 
 const ModalItem = styled.li`
-  margin-bottom: 20px;
+  margin-bottom: 2rem;
 `;
 
 const ItemTitle = styled.span`
-  width: 100px;
-  font-size: 18px;
+  width: 10rem;
+  font-size: 1.8rem;
   font-weight: 700;
-  margin-right: 10px;
+  margin-right: 1rem;
   float: left;
 `;
 
 const ItemValue = styled.div`
-  font-size: 16px;
+  font-size: 1.6rem;
   .rating {
-    top: -4px;
+    top: -0.4rem;
     float: left;
-    margin-right: 5px;
+    margin-right: 0.5rem;
   }
   .channel {
     float: left;
-    height: 20px;
+    height: 2rem;
   }
   .channel ~ .channel {
-    margin-left: 20px;
+    margin-left: 2rem;
   }
 `;
 
 const Clear = styled.div`
   clear: both;
-  margin-bottom: 20px;
+  margin-bottom: 2rem;
 `;
 
 const ModalOverView = styled.p`
-  margin-bottom: 50px;
-  font-size: 14px;
+  margin-bottom: 5rem;
+  font-size: 1.4rem;
 `;
 
 interface IModal {

@@ -13,19 +13,19 @@ import SearchContent from "./SearchContent";
 const Wrapper = styled.div`
   position: relative;
   height: 100vh;
-  margin-top: 30px;
-  top: 80px;
+  margin-top: 3rem;
+  top: 8rem;
 `;
 
 const LeftWrap = styled.div`
   float: left;
-  width: 400px;
+  width: 40rem;
   height: 100vh;
 `;
 
 const RightWrap = styled.div`
   float: left;
-  width: calc(100% - 400px);
+  width: calc(100% - 40rem);
   height: 100vh;
   position: relative;
 `;
@@ -37,19 +37,19 @@ const SearchForm = styled.form`
   align-items: left;
   flex-direction: column;
   width: 100%;
-  padding: 0 15px;
+  padding: 0 1.5rem;
   z-index: 0;
 `;
 
 const Input = styled.input`
   transform-origin: left center;
-  padding: 5px 5px;
+  padding: 0.5rem 0.5rem;
   z-index: -1;
   color: white;
-  font-size: 28px;
+  font-size: 2.8rem;
   background-color: transparent;
   border: 1px solid ${(props) => props.theme.white.lighter};
-  margin-bottom: 20px;
+  margin-bottom: 2rem;
   z-index: 1;
 `;
 const Announcement = styled.p`

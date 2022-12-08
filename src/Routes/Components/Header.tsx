@@ -3,6 +3,8 @@ import styled from "styled-components";
 import { motion, useAnimation, useScroll } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useRecoilValue } from "recoil";
+import { windowWidth } from "../../atoms";
 
 const Nav = styled(motion.nav)`
   display: flex;
@@ -11,13 +13,13 @@ const Nav = styled(motion.nav)`
   position: fixed;
   width: 100%;
   top: 0;
-  font-size: 14px;
-  padding: 20px 60px;
+  font-size: 1.4rem;
+  padding: 2rem 6rem;
   color: #fff;
   z-index: 98;
 
   @media only screen and (max-width: 500px) {
-    padding: 10px 30px;
+    padding: 1rem 3rem;
   }
 `;
 
@@ -27,17 +29,17 @@ const Col = styled.div`
 `;
 
 const Logo = styled(motion.svg)`
-  margin-right: 50px;
-  width: 95px;
-  height: 25px;
+  margin-right: 5rem;
+  width: 9.5rem;
+  height: 2.5rem;
   fill: ${(props) => props.theme.red};
   path {
-    stroke-width: 6px;
+    stroke-width: 0.6rem;
     stroke: white;
   }
 
   @media only screen and (max-width: 500px) {
-    margin-right: 20px;
+    margin-right: 2rem;
   }
 `;
 
@@ -47,7 +49,7 @@ const Items = styled.ul`
 `;
 
 const Item = styled.li`
-  margin-right: 20px;
+  margin-right: 2rem;
   color: ${(props) => props.theme.white.darker};
   transition: color 0.3s ease-in-out;
   position: relative;
@@ -61,10 +63,10 @@ const Item = styled.li`
 
 const Circle = styled(motion.span)`
   position: absolute;
-  width: 5px;
-  height: 5px;
-  border-radius: 2.5px;
-  right: -8px;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 0.25rem;
+  right: -0.8rem;
   transition: transformX(-50%);
   background-color: ${(props) => props.theme.red};
 `;
@@ -76,7 +78,7 @@ const Search = styled.form`
   align-items: center;
   position: relative;
   svg {
-    height: 25px;
+    height: 2.5rem;
   }
 `;
 
@@ -84,17 +86,17 @@ const Input = styled(motion.input)`
   transform-origin: right center;
   position: absolute;
   right: 0px;
-  padding: 5px 10px;
-  padding-left: 40px;
+  padding: 0.5rem 1rem;
+  padding-left: 4rem;
   z-index: -1;
   color: white;
-  font-size: 16px;
+  font-size: 1.6rem;
   background-color: transparent;
   border: 1px solid ${(props) => props.theme.white.lighter};
 
-  @media only screen and (max-width: 500px) {
-    padding: 5px 0;
-    font-size: 14px;
+  @media only screen and (max-width: 650px) {
+    padding: 0.5rem 0;
+    width: 15rem;
   }
 `;
 
@@ -128,6 +130,16 @@ function Header() {
   const inputAnimation = useAnimation();
   const { scrollY } = useScroll();
 
+  const width = useRecoilValue(windowWidth);
+  const getSearchIconLocate = () => {
+    if (width > 650) {
+      setSearchLocate(-210);
+    } else {
+      setSearchLocate(-127);
+    }
+  };
+  const [searchLocate, setSearchLocate] = useState(-210); // Slide 보여줄 개수
+  useEffect(() => getSearchIconLocate, [width]);
   useEffect(() => {
     scrollY.onChange(() => {
       if (scrollY.get() > 80) {
@@ -192,7 +204,7 @@ function Header() {
         <Search onSubmit={handleSubmit(onValid)}>
           <motion.svg
             onClick={toggleSearch}
-            animate={{ x: searchOpen ? -210 : 0 }}
+            animate={{ x: searchOpen ? searchLocate : 0 }}
             transition={{ type: "linear" }}
             fill="currentColor"
             viewBox="0 0 20 20"
