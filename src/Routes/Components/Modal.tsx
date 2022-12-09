@@ -30,9 +30,11 @@ const ModalBox = styled(motion.div)`
   background-color: ${(props) => props.theme.black.lighter};
   z-index: 100;
 
+  /* 높이에 따라 스크롤 터지게 만들기 */
   @media screen and (max-height: 860px) {
     overflow: auto;
   }
+
   @media only screen and (max-width: 1600px) {
     width: 50vw;
   }
