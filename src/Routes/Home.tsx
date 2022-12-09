@@ -14,7 +14,6 @@ import Sliders from "./Components/Slider";
 
 const Wrapper = styled.div`
   background: #000;
-  overflow-x: hidden;
 `;
 
 const Loader = styled.div`
@@ -26,7 +25,8 @@ const Loader = styled.div`
 
 const SliderArea = styled.div`
   position: relative;
-  top: -9rem;
+  /* top: -9rem; */
+  top: 0;
 `;
 
 function Home() {

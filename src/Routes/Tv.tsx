@@ -1,12 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import styled from "styled-components";
-import { getPopularTvShows, IData, IGetDataResult, LIST_TYPE } from "../api";
+import { getPopularTvShows, IData, IGetDataResult } from "../api";
 import Banner from "./Components/Banner";
 import Sliders from "./Components/Slider";
 
 const Wrapper = styled.div`
   background: #000;
-  overflow-x: hidden;
 `;
 
 const Loader = styled.div`
