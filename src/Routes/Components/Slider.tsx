@@ -27,7 +27,7 @@ const Title = styled.div`
 
 const ArrowBtn = styled(motion.div)`
   position: absolute;
-  top: 58%;
+  top: 50%;
   transform: translateY(-50%);
   width: 6rem;
   height: 6rem;
@@ -49,6 +49,22 @@ const ArrowBtn = styled(motion.div)`
     width: 2.8rem;
     height: 2.8rem;
   }
+  @media only screen and (max-width: 500px) {
+    top: 55%;
+    width: 5rem;
+    height: 5rem;
+    svg {
+      width: 2rem;
+      height: 2rem;
+    }
+  }
+  /* @media only screen and (max-width: 800px) {
+    height: 13rem;
+  }
+  @media only screen and (max-width: 280px) {
+    height: 18rem;
+  }
+   */
 `;
 
 const LeftArrowBtn = styled(ArrowBtn)`
@@ -93,13 +109,6 @@ const Box = styled(motion.div)<{ bgphoto: string; offset: number }>`
   }
   & ~ & {
     margin-left: 0.6rem;
-  }
-
-  @media only screen and (max-width: 800px) {
-    height: 13rem;
-  }
-  @media only screen and (max-width: 280px) {
-    height: 18rem;
   }
 `;
 

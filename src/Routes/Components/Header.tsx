@@ -4,6 +4,8 @@ import styled from "styled-components";
 import { motion, useAnimation, useScroll } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { windowWidth } from "../../atoms";
+import { useRecoilValue } from "recoil";
 
 const Nav = styled(motion.nav)`
   display: flex;
@@ -135,6 +137,7 @@ function Header() {
   const navAnimation = useAnimation();
   const inputAnimation = useAnimation();
   const { scrollY } = useScroll();
+  const width = useRecoilValue(windowWidth);
 
   const inputRef = useRef<HTMLInputElement | null>(null);
   const navigate = useNavigate();
@@ -159,15 +162,12 @@ function Header() {
   }, [navAnimation, scrollY]);
 
   useEffect(() => {
-    const closeHandler = () => {
-      setSearchOpen(false);
-      inputAnimation.start({
-        scaleX: 0,
-      });
-    };
-    window.addEventListener("resize", closeHandler);
-    return () => window.addEventListener("resize", closeHandler);
-  }, [setSearchOpen, inputAnimation]);
+    setSearchOpen(false);
+    inputAnimation.start({
+      scaleX: 0,
+    });
+  }, [width, inputAnimation]);
+  console.log(searchOpen);
 
   const toggleSearch = () => {
     if (searchOpen) {

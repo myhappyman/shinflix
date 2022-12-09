@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { getDetailData, IDetailInfo } from "../../api";
 import { makeImagePath } from "../../utils";
 import ReactStars from "react-stars";
-
+import { AiOutlineClose } from "react-icons/ai";
 const Overlay = styled(motion.div)`
   position: fixed;
   top: 0;
@@ -18,35 +18,81 @@ const Overlay = styled(motion.div)`
 
 const ModalBox = styled(motion.div)`
   position: fixed;
-  width: 40vw;
-  height: 80vh;
   top: 10rem;
   left: 0;
   right: 0;
   margin: 0 auto;
-  border-radius: 1.5rem;
+  width: 40vw;
+  height: 80vh;
   overflow: hidden;
+  border-radius: 1.5rem;
   background-color: ${(props) => props.theme.black.lighter};
   z-index: 100;
 
-  @media only screen and (max-width: 500px) {
+  @media only screen and (max-width: 1600px) {
+    width: 50vw;
+  }
+  @media only screen and (max-width: 1400px) {
+    width: 60vw;
+  }
+  @media only screen and (max-width: 1200px) {
+    width: 70vw;
+  }
+  @media only screen and (max-width: 1000px) {
+    width: 80vw;
+  }
+  @media only screen and (max-width: 800px) {
+    top: 5rem;
     width: 90vw;
+    height: 90vh;
+  }
+  @media only screen and (max-width: 600px) {
+    top: 0rem;
+    width: 100vw;
+    height: 100vh;
+    border-radius: 0;
   }
 `;
 
 const ModalCover = styled.div`
+  position: relative;
   width: 100%;
+  height: 40rem;
   background-size: cover;
   background-position: center center;
-  height: 40rem;
+  .closeModal {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    width: 2rem;
+    height: 2rem;
+    vertical-align: middle;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    &:hover {
+      color: #181818;
+      scale: 1.3;
+    }
+  }
+
+  @media only screen and (max-width: 500px) {
+    .closeModal {
+      width: 3rem;
+      height: 3rem;
+      cursor: pointer;
+      &:hover {
+        color: #181818;
+      }
+    }
+  }
 `;
 
 const ModalTitle = styled.h3`
+  position: relative;
+  top: -10rem;
   color: ${(props) => props.theme.white.lighter};
   padding: 2rem;
   font-size: 4.6rem;
-  position: relative;
-  top: -10rem;
 `;
 
 const ModalCategory = styled.ul`
@@ -54,25 +100,46 @@ const ModalCategory = styled.ul`
   top: -10rem;
   padding: 2rem;
   color: ${(props) => props.theme.white.lighter};
+  clear: both;
+  &:after {
+    content: "";
+    display: block;
+    clear: both;
+  }
 `;
 
 const ModalItem = styled.li`
+  display: block;
   margin-bottom: 2rem;
 `;
 
 const ItemTitle = styled.span`
+  float: left;
   width: 10rem;
+  margin-right: 1rem;
   font-size: 1.8rem;
   font-weight: 700;
-  margin-right: 1rem;
-  float: left;
+  @media only screen and (max-width: 400px) {
+    font-size: 2rem;
+    line-height: 3.4rem;
+  }
+  @media only screen and (max-width: 300px) {
+    font-size: 2.4rem;
+    line-height: 4rem;
+  }
+  @media only screen and (max-width: 250px) {
+    font-size: 2.8rem;
+    line-height: 6rem;
+    width: 14rem;
+  }
 `;
 
 const ItemValue = styled.div`
   font-size: 1.6rem;
+  line-height: 2.4rem;
   .rating {
-    top: -0.4rem;
     float: left;
+    top: -0.4rem;
     margin-right: 0.5rem;
   }
   .channel {
@@ -81,6 +148,19 @@ const ItemValue = styled.div`
   }
   .channel ~ .channel {
     margin-left: 2rem;
+  }
+
+  @media only screen and (max-width: 400px) {
+    font-size: 2rem;
+    line-height: 3.4rem;
+  }
+  @media only screen and (max-width: 300px) {
+    font-size: 2.4rem;
+    line-height: 4rem;
+  }
+  @media only screen and (max-width: 250px) {
+    font-size: 2.8rem;
+    line-height: 6rem;
   }
 `;
 
@@ -151,7 +231,13 @@ export default function Modal({
                   "w500"
                 )})`,
               }}
-            />
+            >
+              <AiOutlineClose
+                onClick={onOverlayClicked}
+                className="closeModal"
+                size={"2rem"}
+              />
+            </ModalCover>
             <ModalTitle>{data?.title ? data?.title : data?.name}</ModalTitle>
             <ModalCategory>
               {/* 줄거리 */}
