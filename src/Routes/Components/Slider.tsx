@@ -61,13 +61,6 @@ const ArrowBtn = styled(motion.div)<{ mobile: number }>`
       height: 2rem;
     }
   }
-  /* @media only screen and (max-width: 800px) {
-    height: 13rem;
-  }
-  @media only screen and (max-width: 280px) {
-    height: 18rem;
-  }
-   */
 `;
 
 const LeftArrowBtn = styled(ArrowBtn)`
@@ -81,9 +74,6 @@ const RightArrowBtn = styled(ArrowBtn)`
 const Row = styled(motion.div)<{ gridcnt: number }>`
   position: absolute;
   left: 0;
-  /* display: grid;
-  gap: 5px;
-  grid-template-columns: repeat(${(props) => props.gridcnt}, 1fr); */
   margin-bottom: 3rem;
   width: 100%;
   clear: both;
@@ -154,8 +144,8 @@ const boxVariants = {
     y: -50,
     transition: {
       type: "tween",
-      delay: 0.5,
-      duration: 0.3,
+      delay: 0.3,
+      duration: 0.2,
     },
   },
 };

@@ -12,10 +12,15 @@ const Nav = styled(motion.nav)`
   justify-content: space-between;
   align-items: center;
   position: fixed;
-  width: 100%;
   top: 0;
-  font-size: 1.4rem;
+  width: 100%;
+  background-image: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.7) 10%,
+    transparent
+  );
   padding: 2rem 6rem;
+  font-size: 1.4rem;
   color: #fff;
   z-index: 98;
 
@@ -86,6 +91,7 @@ const Search = styled.form`
 const SearchIcon = styled(motion.svg)`
   position: absolute;
   left: 0;
+  cursor: pointer;
 `;
 
 const Input = styled(motion.input)`
@@ -99,6 +105,7 @@ const Input = styled(motion.input)`
   background-color: transparent;
   z-index: -1;
   transform-origin: right center;
+  outline: none;
 
   @media only screen and (max-width: 650px) {
     width: 15rem;
@@ -146,7 +153,17 @@ function Header() {
       keyword: "",
     },
   });
-  const { ref, ...rest } = register("keyword");
+  const initializationInput = () => {
+    setSearchOpen(false);
+    inputAnimation.start({
+      scaleX: 0,
+    });
+  };
+  const { ref, ...rest } = register("keyword", {
+    required: true,
+    minLength: 2,
+    onBlur: initializationInput,
+  });
   const onValid = (data: IForm) => {
     navigate(`/search?keyword=${data.keyword}`);
   };
@@ -162,10 +179,7 @@ function Header() {
   }, [navAnimation, scrollY]);
 
   useEffect(() => {
-    setSearchOpen(false);
-    inputAnimation.start({
-      scaleX: 0,
-    });
+    initializationInput();
   }, [width, inputAnimation]);
 
   const toggleSearch = () => {
@@ -182,7 +196,7 @@ function Header() {
     }
 
     setSearchOpen((prev) => !prev);
-    setSearchLocate(inputRef.current?.clientWidth || 0);
+    setSearchLocate((inputRef.current?.clientWidth || 0) - 6);
   };
 
   return (
@@ -218,7 +232,7 @@ function Header() {
         <Search onSubmit={handleSubmit(onValid)}>
           <SearchIcon
             onClick={toggleSearch}
-            animate={{ x: searchOpen ? searchLocate * -1 : 0 }}
+            animate={{ x: searchOpen ? searchLocate * -1 : -25 }}
             transition={{ type: "linear" }}
             fill="currentColor"
             viewBox="0 0 20 20"

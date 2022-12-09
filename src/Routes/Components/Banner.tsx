@@ -13,7 +13,7 @@ const Wrapper = styled.div<{ bgphoto: string }>`
   flex-direction: column;
   justify-content: center;
   height: 100vh;
-  padding: 6.8rem;
+  padding: 6.8rem 6rem;
   background-repeat: no-repeat;
   background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 1)),
     url(${(props) => props.bgphoto});
@@ -38,11 +38,11 @@ const Wrapper = styled.div<{ bgphoto: string }>`
   }
   @media screen and (max-width: 1000px) {
     height: 65vh;
-    padding: 4.2rem;
+    padding: 4.2rem 6rem;
   }
   @media screen and (max-width: 500px) {
     height: 50vh;
-    padding: 3.4rem;
+    padding: 3.4rem 3rem;
   }
   @media screen and (min-width: 216px) {
     background-position: center top;

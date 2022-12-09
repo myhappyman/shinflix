@@ -5,15 +5,12 @@ import { useRecoilValue } from "recoil";
 import styled from "styled-components";
 import { IGetSearchResult, searchData } from "../api";
 import { slideCnt } from "../atoms";
-import { makeImagePath } from "../utils";
+import { makeImagePath, NoSearchDataImage } from "../utils";
 
 const Row = styled.div`
   position: absolute;
   left: 0;
   margin: -0.3rem;
-  /* display: grid;
-  gap: 0.5rem;
-  grid-template-columns: repeat(6, 1fr); */
   margin-bottom: 3rem;
   width: 100%;
   clear: both;
@@ -41,9 +38,6 @@ const Box = styled(motion.div)<{ bgphoto: string; offset: number }>`
   &:last-child {
     transform-origin: center right;
   }
-  /* & ~ & {
-    margin-left: 0.6rem;
-  } */
 
   @media only screen and (max-width: 800px) {
     height: 13rem;
@@ -64,6 +58,18 @@ const Info = styled(motion.div)`
     text-align: center;
     font-size: 1.8rem;
   }
+`;
+
+const NoSearchData = styled.div<{ imgUrl: string }>`
+  position: absolute;
+  top: 39%;
+  transform: translateY(-50%);
+  padding-top: 8rem;
+  width: 100%;
+  text-align: center;
+  font-size: 2.8rem;
+  font-weight: 500;
+  background: url(${(props) => props.imgUrl}) no-repeat center top;
 `;
 
 const boxVariants = {
@@ -128,7 +134,9 @@ function SearchContent({ keyword }: { keyword: string }) {
           ))}
         </Row>
       ) : (
-        <h1>'{keyword}' 검색 결과가 없습니다.</h1>
+        <NoSearchData imgUrl={NoSearchDataImage() || ""}>
+          '{keyword}' 검색 결과가 없습니다.
+        </NoSearchData>
       )}
     </>
   );

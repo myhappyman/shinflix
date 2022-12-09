@@ -11,49 +11,28 @@ import Modal from "./Components/Modal";
 import SearchContent from "./SearchContent";
 
 const Wrapper = styled.div`
-  position: relative;
-  top: 8rem;
-  display: flex;
-  height: 100vh;
-  margin-top: 3rem;
-  @media screen and (max-width: 1760px) {
-    flex-direction: column;
+  padding: 11rem 6rem 0;
+  @media only screen and (max-width: 500px) {
+    padding: 9rem 3rem;
   }
 `;
 
-const LeftWrap = styled.div`
-  width: 40rem;
-  height: 100vh;
-  @media screen and (max-width: 1760px) {
-    width: 100vw;
-    height: auto;
-    margin-bottom: 5rem;
-  }
-`;
+const LeftWrap = styled.div``;
 
 const RightWrap = styled.div`
   position: relative;
-  width: calc(100% - 40rem);
-  height: 100vh;
-  @media screen and (max-width: 1760px) {
-    width: 100vw;
-    height: 100vh;
-  }
+  width: 100%;
+  height: calc(100vh - 17.4rem);
 `;
 
 const SearchForm = styled.form`
-  display: flex;
-  justify-content: center;
-  align-items: left;
-  flex-direction: column;
   width: 100%;
-  padding: 0 1.5rem;
+  padding-bottom: 2rem;
   color: #fff;
   z-index: 0;
 `;
 
 const Input = styled.input`
-  margin-bottom: 2rem;
   padding: 0.5rem 0.5rem;
   color: white;
   font-size: 2.8rem;
@@ -63,7 +42,15 @@ const Input = styled.input`
   transform-origin: left center;
 `;
 const Announcement = styled.p`
+  display: inline-block;
+  padding-left: 1.8rem;
   text-align: left;
+  font-size: 1.4rem;
+  vertical-align: bottom;
+  @media only screen and (max-width: 680px) {
+    display: block;
+    padding: 1.8rem 0 0 0;
+  }
 `;
 
 interface ISearchForm {
@@ -89,7 +76,7 @@ function Search() {
       <LeftWrap>
         <SearchForm onSubmit={handleSubmit(onValid)}>
           <Input type="text" {...register("searchKeyword")} />
-          <Announcement>"{keyword}"로 검색한 결과입니다.</Announcement>
+          <Announcement>"{keyword}"으로 검색한 결과입니다.</Announcement>
         </SearchForm>
       </LeftWrap>
       <RightWrap>{keyword && <SearchContent keyword={keyword} />}</RightWrap>

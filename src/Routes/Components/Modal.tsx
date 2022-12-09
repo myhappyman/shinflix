@@ -1,16 +1,19 @@
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { useMatch, useNavigate } from "react-router-dom";
-import styled from "styled-components";
+import styled, { createGlobalStyle } from "styled-components";
 import { getDetailData, IDetailInfo } from "../../api";
 import { makeImagePath } from "../../utils";
 import ReactStars from "react-stars";
 import { AiOutlineClose } from "react-icons/ai";
 
+const GlobalStyle = createGlobalStyle`
+html{overflow: hidden;}
+`;
 const Overlay = styled(motion.div)`
   position: fixed;
   top: 0;
-  width: 100vw;
+  width: 100%;
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.5);
   opacity: 0;
@@ -23,8 +26,8 @@ const ModalBox = styled(motion.div)`
   left: 0;
   right: 0;
   margin: 0 auto;
-  width: 40vw;
-  height: 80vh;
+  width: 40%;
+  height: 80%;
   overflow: hidden;
   border-radius: 1.5rem;
   background-color: ${(props) => props.theme.black.lighter};
@@ -36,26 +39,26 @@ const ModalBox = styled(motion.div)`
   }
 
   @media only screen and (max-width: 1600px) {
-    width: 50vw;
+    width: 50%;
   }
   @media only screen and (max-width: 1400px) {
-    width: 60vw;
+    width: 60%;
   }
   @media only screen and (max-width: 1200px) {
-    width: 70vw;
+    width: 70%;
   }
   @media only screen and (max-width: 1000px) {
-    width: 80vw;
+    width: 80%;
   }
   @media only screen and (max-width: 800px) {
     top: 5rem;
-    width: 90vw;
-    height: 90vh;
+    width: 90%;
+    height: auto;
   }
   @media only screen and (max-width: 600px) {
-    top: 0rem;
-    width: 100vw;
-    height: 100vh;
+    top: 0;
+    bottom: 0;
+    width: 100%;
     border-radius: 0;
   }
 
@@ -237,6 +240,7 @@ export default function Modal({
 
   return (
     <>
+      <GlobalStyle />
       <Overlay
         onClick={onOverlayClicked}
         exit={{ opacity: 0 }}
