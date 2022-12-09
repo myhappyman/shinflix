@@ -1,10 +1,9 @@
+import { useRef } from "react";
 import { Link, useMatch, PathMatch, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { motion, useAnimation, useScroll } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useRecoilValue } from "recoil";
-import { windowWidth } from "../../atoms";
 
 const Nav = styled(motion.nav)`
   display: flex;
@@ -82,6 +81,11 @@ const Search = styled.form`
   }
 `;
 
+const SearchIcon = styled(motion.svg)`
+  position: absolute;
+  left: 0;
+`;
+
 const Input = styled(motion.input)`
   transform-origin: right center;
   position: absolute;
@@ -96,6 +100,7 @@ const Input = styled(motion.input)`
 
   @media only screen and (max-width: 650px) {
     padding: 0.5rem 0;
+    padding-left: 3rem;
     width: 15rem;
   }
 `;
@@ -123,6 +128,7 @@ interface IForm {
 
 function Header() {
   const [searchOpen, setSearchOpen] = useState(false);
+  const [searchLocate, setSearchLocate] = useState(0);
   const homeMatch: PathMatch<string> | null = useMatch("/");
   const homeMatch2: PathMatch<string> | null = useMatch("/home/*");
   const tvMatch: PathMatch<string> | null = useMatch("/tv/*");
@@ -130,16 +136,18 @@ function Header() {
   const inputAnimation = useAnimation();
   const { scrollY } = useScroll();
 
-  const width = useRecoilValue(windowWidth);
-  const getSearchIconLocate = () => {
-    if (width > 650) {
-      setSearchLocate(-210);
-    } else {
-      setSearchLocate(-127);
-    }
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const navigate = useNavigate();
+  const { register, handleSubmit } = useForm<IForm>({
+    defaultValues: {
+      keyword: "",
+    },
+  });
+  const { ref, ...rest } = register("keyword");
+  const onValid = (data: IForm) => {
+    navigate(`/search?keyword=${data.keyword}`);
   };
-  const [searchLocate, setSearchLocate] = useState(-210); // Slide 보여줄 개수
-  useEffect(() => getSearchIconLocate, [width]);
+
   useEffect(() => {
     scrollY.onChange(() => {
       if (scrollY.get() > 80) {
@@ -148,7 +156,18 @@ function Header() {
         navAnimation.start("top");
       }
     });
-  }, [scrollY]);
+  }, [navAnimation, scrollY]);
+
+  useEffect(() => {
+    const closeHandler = () => {
+      setSearchOpen(false);
+      inputAnimation.start({
+        scaleX: 0,
+      });
+    };
+    window.addEventListener("resize", closeHandler);
+    return () => window.addEventListener("resize", closeHandler);
+  }, [setSearchOpen, inputAnimation]);
 
   const toggleSearch = () => {
     if (searchOpen) {
@@ -162,13 +181,9 @@ function Header() {
         scaleX: 1,
       });
     }
-    setSearchOpen((prev) => !prev);
-  };
 
-  const navigate = useNavigate();
-  const { register, handleSubmit } = useForm<IForm>();
-  const onValid = (data: IForm) => {
-    navigate(`/search?keyword=${data.keyword}`);
+    setSearchOpen((prev) => !prev);
+    setSearchLocate(inputRef.current?.clientWidth || 0);
   };
 
   return (
@@ -202,9 +217,9 @@ function Header() {
       </Col>
       <Col>
         <Search onSubmit={handleSubmit(onValid)}>
-          <motion.svg
+          <SearchIcon
             onClick={toggleSearch}
-            animate={{ x: searchOpen ? searchLocate : 0 }}
+            animate={{ x: searchOpen ? searchLocate * -1 : 0 }}
             transition={{ type: "linear" }}
             fill="currentColor"
             viewBox="0 0 20 20"
@@ -215,9 +230,17 @@ function Header() {
               d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
               clipRule="evenodd"
             ></path>
-          </motion.svg>
+          </SearchIcon>
           <Input
-            {...register("keyword", { required: true, minLength: 2 })}
+            // {...register("keyword", { required: true, minLength: 2 })}
+            {...rest}
+            name="keyword"
+            ref={(e) => {
+              if (e) {
+                ref(e);
+                inputRef.current = e;
+              }
+            }}
             initial={{ scaleX: 0 }}
             animate={inputAnimation}
             transition={{ type: "linear" }}

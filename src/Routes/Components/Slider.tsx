@@ -1,13 +1,13 @@
-import { useEffect, useState } from "react";
-import { AnimatePresence, motion, useScroll } from "framer-motion";
+import { useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import styled from "styled-components";
 import { IGetDataResult } from "../../api";
 import { makeImagePath } from "../../utils";
 import { PathMatch, useMatch, useNavigate } from "react-router-dom";
 import Modal from "./Modal";
 import { AiOutlineLeft, AiOutlineRight } from "react-icons/ai";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { windowWidth } from "../../atoms";
+import { useRecoilValue } from "recoil";
+import { slideCnt } from "../../atoms";
 
 const Wrapper = styled.div`
   position: relative;
@@ -76,7 +76,6 @@ const Row = styled(motion.div)<{ gridcnt: number }>`
 `;
 
 const Box = styled(motion.div)<{ bgphoto: string; offset: number }>`
-  background-color: #fff;
   display: block;
   float: left;
   width: calc(100% / ${(props) => props.offset} - 5px);
@@ -175,24 +174,7 @@ export default function Sliders({
   menuName,
   mediaType,
 }: ISlider) {
-  const width = useRecoilValue(windowWidth);
-  const getOffset = () => {
-    if (width > 1400) {
-      setOffset(6);
-    } else if (width > 1130) {
-      setOffset(5);
-    } else if (width > 900) {
-      setOffset(4);
-    } else if (width > 680) {
-      setOffset(3);
-    } else if (width > 250) {
-      setOffset(2);
-    } else {
-      setOffset(1);
-    }
-  };
-  const [offset, setOffset] = useState(6); // Slide 보여줄 개수
-  useEffect(() => getOffset, [width]);
+  const offset = useRecoilValue(slideCnt);
   const [isRight, setIsRight] = useState(1); // left: -1, right: 1
   const [index, setIndex] = useState(0);
   const [leaving, setLeaving] = useState(false);

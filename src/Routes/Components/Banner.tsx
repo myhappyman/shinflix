@@ -5,9 +5,8 @@ import { AiFillCaretRight, AiOutlineInfoCircle } from "react-icons/ai";
 import { PathMatch, useMatch, useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import Modal from "./Modal";
-import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
-import { windowWidth } from "../../atoms";
+import { BannerSize } from "../../atoms";
 
 const Wrapper = styled.div<{ bgphoto: string }>`
   height: 100vh;
@@ -197,15 +196,7 @@ function Banner({
   const onBoxClicked = (id: number) => {
     navigate(`/${detailSearchUrl}/${id}`);
   };
-  const width = useRecoilValue(windowWidth);
-  const [bannerBgSize, setBannerBgSize] = useState("");
-  useEffect(() => {
-    if (width < 501) {
-      setBannerBgSize("w500");
-    } else {
-      setBannerBgSize("");
-    }
-  }, [width]);
+  const bannerBgSize = useRecoilValue(BannerSize);
 
   return (
     <Wrapper

@@ -15,19 +15,30 @@ const Wrapper = styled.div`
   height: 100vh;
   margin-top: 3rem;
   top: 8rem;
+  display: flex;
+  @media screen and (max-width: 1760px) {
+    flex-direction: column;
+  }
 `;
 
 const LeftWrap = styled.div`
-  float: left;
   width: 40rem;
   height: 100vh;
+  @media screen and (max-width: 1760px) {
+    width: 100vw;
+    height: auto;
+    margin-bottom: 5rem;
+  }
 `;
 
 const RightWrap = styled.div`
-  float: left;
   width: calc(100% - 40rem);
   height: 100vh;
   position: relative;
+  @media screen and (max-width: 1760px) {
+    width: 100vw;
+    height: 100vh;
+  }
 `;
 
 const SearchForm = styled.form`

@@ -14,7 +14,7 @@ function App() {
     const debouncedResizeHandler = () => setWidth(window.innerWidth);
     window.addEventListener("resize", debouncedResizeHandler);
     return () => window.removeEventListener("resize", debouncedResizeHandler);
-  }, []);
+  }, [setWidth]);
 
   return (
     <Router basename={process.env.PUBLIC_URL}>

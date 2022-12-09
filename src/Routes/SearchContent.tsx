@@ -1,23 +1,35 @@
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import { useRecoilValue } from "recoil";
 import styled from "styled-components";
 import { IGetSearchResult, searchData } from "../api";
+import { slideCnt } from "../atoms";
 import { makeImagePath } from "../utils";
 
 const Row = styled.div`
-  display: grid;
-  gap: 0.5rem;
-  grid-template-columns: repeat(6, 1fr);
-  margin-bottom: 3rem;
-  width: 100%;
   position: absolute;
   left: 0;
+  margin: -0.3rem;
+  /* display: grid;
+  gap: 0.5rem;
+  grid-template-columns: repeat(6, 1fr); */
+  margin-bottom: 3rem;
+  width: 100%;
+  clear: both;
+  &:after {
+    content: "";
+    display: block;
+    clear: both;
+  }
 `;
 
-const Box = styled(motion.div)<{ bgphoto: string }>`
-  background-color: #fff;
-  height: 20rem;
+const Box = styled(motion.div)<{ bgphoto: string; offset: number }>`
+  display: block;
+  float: left;
+  margin: 0.3rem;
+  width: calc(100% / ${(props) => props.offset} - 0.6rem);
+  height: 16rem;
   background-image: url(${(props) => props.bgphoto});
   background-size: cover;
   background-position: center;
@@ -28,6 +40,16 @@ const Box = styled(motion.div)<{ bgphoto: string }>`
   }
   &:last-child {
     transform-origin: center right;
+  }
+  /* & ~ & {
+    margin-left: 0.6rem;
+  } */
+
+  @media only screen and (max-width: 800px) {
+    height: 13rem;
+  }
+  @media only screen and (max-width: 280px) {
+    height: 18rem;
   }
 `;
 
@@ -71,6 +93,7 @@ const infoVariants = {
 };
 
 function SearchContent({ keyword }: { keyword: string }) {
+  const offset = useRecoilValue(slideCnt);
   const { data } = useQuery<IGetSearchResult>(
     ["search", keyword],
     () => searchData(keyword || ""),
@@ -95,6 +118,7 @@ function SearchContent({ keyword }: { keyword: string }) {
               whileHover="hover"
               transition={{ type: "tween" }}
               bgphoto={makeImagePath(d.backdrop_path || "", "w500")}
+              offset={offset}
               onClick={() => onBoxClicked(d.media_type, d.id)}
             >
               <Info variants={infoVariants}>

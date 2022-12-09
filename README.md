@@ -31,6 +31,60 @@ github에 deploy까지 처리하고 나니 Home쪽에 기본 URL이 클릭해서
 absolute의 영역 덩어리의 사이즈가 없다보니 겹치는 현상이였는데, 이런 경우 꼭 height등으로 영역의 사이즈를 잡아줘서 겹치지 않도록 하자. position다시 한번 공부할것...
 css 학습 필요 ㅠㅠ
 
+##### -react hook form에서 register로 적용한 input에 ref값을 걸고 알아내기
+
+```JSX
+import { useRef } from "react";
+import { Link, useMatch, PathMatch, useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import { motion, useAnimation, useScroll } from "framer-motion";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+
+interface IForm {
+  keyword: string;
+}
+
+function Header() {
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const navigate = useNavigate();
+  const { register, handleSubmit } = useForm<IForm>({
+    defaultValues: {
+      keyword: "",
+    },
+  });
+  const { ref, ...rest } = register("keyword");
+  const onValid = (data: IForm) => {
+    navigate(`/search?keyword=${data.keyword}`);
+  };
+  return (
+    <Search onSubmit={handleSubmit(onValid)}>
+      <Input
+        {...rest}
+        name="keyword"
+        ref={(e) => {
+          if (e) {
+            ref(e);
+            inputRef.current = e;
+          }
+        }}
+        initial={{ scaleX: 0 }}
+        animate={inputAnimation}
+        transition={{ type: "linear" }}
+        placeholder="Search for moive or tv show"
+        type="text"
+      />
+    </Search>
+  );
+}
+
+export default Header;
+```
+
+register를 선언하여 name값을 만들고 ref값을 추출하여 input태그에 ref props에서 조건문으로
+존재하는 경우에만 current값을 넣는형식으로 처리한다...
+별거 아닌데 typescript가 아직 익숙치 않아 한참 헤맨 처리방법 ㅠㅠ width값을 알아내기 위해 사용했다.
+
 # 0. ShinFlix start!
 
 드디어 넷플릭스 클론 코딩을 시작합니다.
