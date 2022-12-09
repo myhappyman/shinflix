@@ -54,12 +54,12 @@ const Box = styled(motion.div)<{ bgphoto: string; offset: number }>`
 `;
 
 const Info = styled(motion.div)`
-  padding: 1rem;
-  background-color: ${(props) => props.theme.black.lighter};
-  opacity: 0;
   position: relative;
   top: 15.8rem;
   width: 100%;
+  padding: 1rem;
+  background-color: ${(props) => props.theme.black.lighter};
+  opacity: 0;
   h4 {
     text-align: center;
     font-size: 1.8rem;

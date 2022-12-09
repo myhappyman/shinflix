@@ -12,10 +12,10 @@ import SearchContent from "./SearchContent";
 
 const Wrapper = styled.div`
   position: relative;
-  height: 100vh;
-  margin-top: 3rem;
   top: 8rem;
   display: flex;
+  height: 100vh;
+  margin-top: 3rem;
   @media screen and (max-width: 1760px) {
     flex-direction: column;
   }
@@ -32,9 +32,9 @@ const LeftWrap = styled.div`
 `;
 
 const RightWrap = styled.div`
+  position: relative;
   width: calc(100% - 40rem);
   height: 100vh;
-  position: relative;
   @media screen and (max-width: 1760px) {
     width: 100vw;
     height: 100vh;
@@ -42,26 +42,25 @@ const RightWrap = styled.div`
 `;
 
 const SearchForm = styled.form`
-  color: white;
   display: flex;
   justify-content: center;
   align-items: left;
   flex-direction: column;
   width: 100%;
   padding: 0 1.5rem;
+  color: #fff;
   z-index: 0;
 `;
 
 const Input = styled.input`
-  transform-origin: left center;
+  margin-bottom: 2rem;
   padding: 0.5rem 0.5rem;
-  z-index: -1;
   color: white;
   font-size: 2.8rem;
   background-color: transparent;
   border: 1px solid ${(props) => props.theme.white.lighter};
-  margin-bottom: 2rem;
   z-index: 1;
+  transform-origin: left center;
 `;
 const Announcement = styled.p`
   text-align: left;

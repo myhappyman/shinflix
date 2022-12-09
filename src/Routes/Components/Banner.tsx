@@ -9,10 +9,10 @@ import { useRecoilValue } from "recoil";
 import { BannerSize } from "../../atoms";
 
 const Wrapper = styled.div<{ bgphoto: string }>`
-  height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  height: 100vh;
   padding: 6.8rem;
   background-repeat: no-repeat;
   background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 1)),
@@ -53,9 +53,9 @@ const Wrapper = styled.div<{ bgphoto: string }>`
 `;
 
 const Title = styled.h2`
+  margin-bottom: 2rem;
   font-size: 4rem;
   font-weight: 900;
-  margin-bottom: 2rem;
 
   @media only screen and (max-width: 1200px) {
     font-size: 3.2rem;
@@ -69,10 +69,10 @@ const Title = styled.h2`
 `;
 
 const Overview = styled.p`
+  margin-bottom: 2rem;
   width: 52.8rem;
   font-size: 1.8rem;
   font-weight: 700;
-  margin-bottom: 2rem;
   line-height: 2.5rem;
 
   @media only screen and (max-width: 1200px) {

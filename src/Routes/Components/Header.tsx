@@ -50,13 +50,13 @@ const Items = styled.ul`
 `;
 
 const Item = styled.li`
-  margin-right: 2rem;
-  color: ${(props) => props.theme.white.darker};
-  transition: color 0.3s ease-in-out;
   position: relative;
   display: flex;
   justify-content: center;
   flex-direction: column;
+  margin-right: 2rem;
+  color: ${(props) => props.theme.white.darker};
+  transition: color 0.3s ease-in-out;
   &:hover {
     color: ${(props) => props.theme.white.lighter};
   }
@@ -64,20 +64,20 @@ const Item = styled.li`
 
 const Circle = styled(motion.span)`
   position: absolute;
+  right: -0.8rem;
   width: 0.5rem;
   height: 0.5rem;
   border-radius: 0.25rem;
-  right: -0.8rem;
-  transition: transformX(-50%);
   background-color: ${(props) => props.theme.red};
+  transition: transformX(-50%);
 `;
 
 const Search = styled.form`
-  color: white;
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
-  position: relative;
+  color: white;
   svg {
     height: 2.5rem;
   }
@@ -89,21 +89,21 @@ const SearchIcon = styled(motion.svg)`
 `;
 
 const Input = styled(motion.input)`
-  transform-origin: right center;
   position: absolute;
   right: 0px;
   padding: 0.5rem 1rem;
   padding-left: 4rem;
-  z-index: -1;
-  color: white;
-  font-size: 1.6rem;
-  background-color: transparent;
   border: 1px solid ${(props) => props.theme.white.lighter};
+  font-size: 1.6rem;
+  color: white;
+  background-color: transparent;
+  z-index: -1;
+  transform-origin: right center;
 
   @media only screen and (max-width: 650px) {
+    width: 15rem;
     padding: 0.5rem 0;
     padding-left: 3rem;
-    width: 15rem;
   }
 `;
 
@@ -167,7 +167,6 @@ function Header() {
       scaleX: 0,
     });
   }, [width, inputAnimation]);
-  console.log(searchOpen);
 
   const toggleSearch = () => {
     if (searchOpen) {

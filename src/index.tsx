@@ -97,6 +97,21 @@ const GlobalStyle = createGlobalStyle`
     -webkit-box-shadow: 0 0 0px 1000px transparent inset !important;
     -webkit-text-fill-color: #000 !important;
   }
+
+  html::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  html::-webkit-scrollbar-thumb {
+    background-color: #4e4e4e;
+    border-radius: 100px;
+  }
+  html::-webkit-scrollbar-track {
+    background-color: #4e4e4e;
+    border-radius: 100px;
+    background-clip: padding-box;
+    border: 3px solid transparent;
+  }
 `;
 
 const client = new QueryClient();

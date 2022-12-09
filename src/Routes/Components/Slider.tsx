@@ -25,32 +25,35 @@ const Title = styled.div`
   padding-bottom: 1rem;
 `;
 
-const ArrowBtn = styled(motion.div)`
+const ArrowBtn = styled(motion.div)<{ mobile: number }>`
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  width: 6rem;
-  height: 6rem;
-  border-radius: 50%;
-  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 6rem;
+  height: 6rem;
   color: #fff;
-  z-index: 90;
-  opacity: 0;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.5);
+  opacity: ${(props) => props.mobile};
   transition: all 0.3s;
+  z-index: 90;
   cursor: pointer;
   &:hover {
     color: #000;
     background-color: #fff;
+  }
+  &:blur {
+    color: #fff;
+    background-color: #000;
   }
   svg {
     width: 2.8rem;
     height: 2.8rem;
   }
   @media only screen and (max-width: 500px) {
-    top: 55%;
     width: 5rem;
     height: 5rem;
     svg {
@@ -113,12 +116,12 @@ const Box = styled(motion.div)<{ bgphoto: string; offset: number }>`
 `;
 
 const Info = styled(motion.div)`
-  padding: 1rem;
-  background-color: ${(props) => props.theme.black.lighter};
-  opacity: 0;
   position: relative;
   top: 15.8rem;
   width: 100%;
+  padding: 1rem;
+  background-color: ${(props) => props.theme.black.lighter};
+  opacity: 0;
   h4 {
     text-align: center;
     font-size: 1.8rem;
@@ -213,13 +216,25 @@ export default function Sliders({
     `/${menuName}/${listType}/:id`
   );
 
+  const user = navigator.userAgent;
+  const mobile =
+    user.indexOf("iPhone") > -1 || user.indexOf("Android") > -1 ? 1 : 0;
+
   return (
     <Wrapper>
       <Title>{title}</Title>
-      <LeftArrowBtn className="arrow" onClick={() => changeIndex(-1)}>
+      <LeftArrowBtn
+        mobile={mobile}
+        className="arrow"
+        onClick={() => changeIndex(-1)}
+      >
         <AiOutlineLeft />
       </LeftArrowBtn>
-      <RightArrowBtn className="arrow" onClick={() => changeIndex(1)}>
+      <RightArrowBtn
+        mobile={mobile}
+        className="arrow"
+        onClick={() => changeIndex(1)}
+      >
         <AiOutlineRight />
       </RightArrowBtn>
       <AnimatePresence

@@ -6,6 +6,7 @@ import { getDetailData, IDetailInfo } from "../../api";
 import { makeImagePath } from "../../utils";
 import ReactStars from "react-stars";
 import { AiOutlineClose } from "react-icons/ai";
+
 const Overlay = styled(motion.div)`
   position: fixed;
   top: 0;
@@ -29,6 +30,9 @@ const ModalBox = styled(motion.div)`
   background-color: ${(props) => props.theme.black.lighter};
   z-index: 100;
 
+  @media screen and (max-height: 860px) {
+    overflow: auto;
+  }
   @media only screen and (max-width: 1600px) {
     width: 50vw;
   }
@@ -51,6 +55,21 @@ const ModalBox = styled(motion.div)`
     width: 100vw;
     height: 100vh;
     border-radius: 0;
+  }
+
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #4e4e4e;
+    border-radius: 100px;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: #4e4e4e;
+    border-radius: 100px;
+    background-clip: padding-box;
+    border: 3px solid transparent;
   }
 `;
 

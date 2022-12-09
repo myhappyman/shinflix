@@ -10,10 +10,10 @@ const Wrapper = styled.div`
 `;
 
 const Loader = styled.div`
-  height: 20vh;
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 20vh;
 `;
 
 const SliderArea = styled.div`
