@@ -1,11 +1,11 @@
 {
   "files": {
-    "main.js": "/shinflix/static/js/main.0c02b56f.js",
+    "main.js": "/shinflix/static/js/main.2cf37811.js",
     "static/media/blank.png": "/shinflix/static/media/blank.ad97078ff19e33db52bb.png",
     "index.html": "/shinflix/index.html",
-    "main.0c02b56f.js.map": "/shinflix/static/js/main.0c02b56f.js.map"
+    "main.2cf37811.js.map": "/shinflix/static/js/main.2cf37811.js.map"
   },
   "entrypoints": [
-    "static/js/main.0c02b56f.js"
+    "static/js/main.2cf37811.js"
   ]
 }
