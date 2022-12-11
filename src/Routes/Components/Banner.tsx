@@ -13,6 +13,7 @@ const Wrapper = styled.div<{ bgphoto: string }>`
   flex-direction: column;
   justify-content: center;
   height: 100vh;
+  min-height: 78.7rem;
   padding: 6.8rem 6rem;
   background-repeat: no-repeat;
   background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 1)),
@@ -22,26 +23,27 @@ const Wrapper = styled.div<{ bgphoto: string }>`
   /* background: no-repeat url() left/right/center top/bottom/center / cover, 100%,contain; */
 
   @media screen and (max-width: 1500px) {
-    height: 95vh;
+    height: 95%;
   }
   @media screen and (max-width: 1400px) {
-    height: 90vh;
+    height: 90%;
   }
   @media screen and (max-width: 1300px) {
-    height: 85vh;
+    height: 85%;
   }
   @media screen and (max-width: 1200px) {
-    height: 80vh;
+    height: 80%;
   }
   @media screen and (max-width: 1100px) {
-    height: 70vh;
+    height: 70%;
   }
   @media screen and (max-width: 1000px) {
-    height: 65vh;
+    height: 65%;
     padding: 4.2rem 6rem;
   }
   @media screen and (max-width: 500px) {
-    height: 50vh;
+    height: 50%;
+    min-height: 40.8rem;
     padding: 3.4rem 3rem;
   }
   @media screen and (min-width: 216px) {
@@ -63,6 +65,9 @@ const Title = styled.h2`
   @media only screen and (max-width: 700px) {
     font-size: 2.6rem;
   }
+  @media only screen and (max-width: 500px) {
+    font-size: 2rem;
+  }
   @media only screen and (max-width: 350px) {
     margin: 0;
   }
@@ -80,7 +85,7 @@ const Overview = styled.p`
     font-size: 1.2rem;
     line-height: 2rem;
   }
-  @media only screen and (max-width: 700px) {
+  @media only screen and (max-width: 1000px) {
     width: 34rem;
     font-size: 1rem;
     line-height: 1.8rem;
@@ -89,6 +94,10 @@ const Overview = styled.p`
     font-size: 0.8rem;
     line-height: 1.6rem;
   }
+  @media only screen and (max-width: 500px) {
+    width: 26rem;
+  }
+
   @media only screen and (max-width: 350px) {
     opacity: 0;
   }

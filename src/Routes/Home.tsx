@@ -25,7 +25,6 @@ const Loader = styled.div`
 
 const SliderArea = styled.div`
   position: relative;
-  /* top: -9rem; */
   top: 0;
 `;
 
