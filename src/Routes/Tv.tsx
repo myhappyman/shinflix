@@ -17,9 +17,9 @@ const Loader = styled.div`
 
 const SliderArea = styled.div`
   position: relative;
-  top: -16.8rem;
+  margin-top: -16.8rem;
   @media screen and (max-width: 700px) {
-    top: -8.8rem;
+    margin-top: -8.8rem;
   }
 `;
 

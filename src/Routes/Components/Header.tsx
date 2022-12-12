@@ -105,6 +105,10 @@ const Input = styled(motion.input)`
   transform-origin: right center;
   outline: none;
 
+  &::placeholder {
+    color: #95a5a6;
+  }
+
   @media only screen and (max-width: 650px) {
     width: 15rem;
   }
