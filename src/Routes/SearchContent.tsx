@@ -39,12 +39,12 @@ const Box = styled(motion.div)<{ bgphoto: string; offset: number }>`
     transform-origin: center right;
   }
 
-  @media only screen and (max-width: 800px) {
+  /* @media only screen and (max-width: 800px) {
     height: 13rem;
   }
   @media only screen and (max-width: 280px) {
     height: 18rem;
-  }
+  } */
 `;
 
 const Info = styled(motion.div)`

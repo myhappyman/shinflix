@@ -4,8 +4,6 @@ import styled from "styled-components";
 import { motion, useAnimation, useScroll } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-// import { windowWidth } from "../../atoms";
-// import { useRecoilValue } from "recoil";
 
 const Nav = styled(motion.nav)`
   display: flex;
@@ -25,7 +23,7 @@ const Nav = styled(motion.nav)`
   z-index: 98;
 
   @media only screen and (max-width: 500px) {
-    padding: 1rem 3rem;
+    padding: 2rem 3rem;
   }
 `;
 
@@ -109,8 +107,6 @@ const Input = styled(motion.input)`
 
   @media only screen and (max-width: 650px) {
     width: 15rem;
-    padding: 0.5rem 0;
-    padding-left: 3rem;
   }
 `;
 
@@ -144,7 +140,6 @@ function Header() {
   const navAnimation = useAnimation();
   const inputAnimation = useAnimation();
   const { scrollY } = useScroll();
-  // const width = useRecoilValue(windowWidth);
 
   const inputRef = useRef<HTMLInputElement | null>(null);
   const navigate = useNavigate();
@@ -178,10 +173,6 @@ function Header() {
     });
   }, [navAnimation, scrollY]);
 
-  // useEffect(() => {
-  //   initializationInput();
-  // }, [initializationInput]);
-
   const toggleSearch = () => {
     if (searchOpen) {
       //trigger the close animation
@@ -196,7 +187,7 @@ function Header() {
     }
 
     setSearchOpen((prev) => !prev);
-    setSearchLocate((inputRef.current?.clientWidth || 0) - 6);
+    setSearchLocate((inputRef.current?.clientWidth || -25) - 6);
   };
 
   return (
@@ -257,7 +248,7 @@ function Header() {
             initial={{ scaleX: 0 }}
             animate={inputAnimation}
             transition={{ type: "linear" }}
-            placeholder="Search for moive or tv show"
+            placeholder="검색"
             type="text"
           />
         </Search>

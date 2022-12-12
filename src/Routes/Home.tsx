@@ -25,7 +25,10 @@ const Loader = styled.div`
 
 const SliderArea = styled.div`
   position: relative;
-  top: 0;
+  top: -16.8rem;
+  @media screen and (max-width: 700px) {
+    top: -8.8rem;
+  }
 `;
 
 function Home() {

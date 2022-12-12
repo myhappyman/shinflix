@@ -22,13 +22,14 @@ const Overlay = styled(motion.div)`
 
 const ModalBox = styled(motion.div)`
   position: fixed;
-  top: 10rem;
+  top: 8rem;
   left: 0;
   right: 0;
   margin: 0 auto;
   width: 40%;
-  height: 80%;
-  overflow: hidden;
+  min-width: 76.8rem;
+  height: 85%;
+  overflow: auto;
   border-radius: 1.5rem;
   background-color: ${(props) => props.theme.black.lighter};
   z-index: 100;
@@ -38,24 +39,13 @@ const ModalBox = styled(motion.div)`
     overflow: auto;
   }
 
-  @media only screen and (max-width: 1600px) {
-    width: 50%;
-  }
-  @media only screen and (max-width: 1400px) {
-    width: 60%;
-  }
-  @media only screen and (max-width: 1200px) {
-    width: 70%;
-  }
-  @media only screen and (max-width: 1000px) {
-    width: 80%;
-  }
   @media only screen and (max-width: 800px) {
     top: 5rem;
     width: 90%;
+    min-width: 58.8rem;
     height: auto;
   }
-  @media only screen and (max-width: 600px) {
+  @media only screen and (max-width: 700px) {
     top: 0;
     bottom: 0;
     width: 100%;
@@ -110,20 +100,21 @@ const ModalCover = styled.div`
     }
   }
 `;
+const ModalContents = styled.div`
+  position: relative;
+  /* top: -10rem; */
+  margin-top: -10rem;
+  color: ${(props) => props.theme.white.lighter};
+  padding: 0 2rem;
+`;
 
 const ModalTitle = styled.h3`
-  position: relative;
-  top: -10rem;
-  color: ${(props) => props.theme.white.lighter};
-  padding: 2rem;
+  padding: 2rem 0;
   font-size: 4.6rem;
 `;
 
 const ModalCategory = styled.ul`
-  position: relative;
-  top: -10rem;
-  padding: 2rem;
-  color: ${(props) => props.theme.white.lighter};
+  padding: 2rem 0;
   clear: both;
   &:after {
     content: "";
@@ -263,92 +254,94 @@ export default function Modal({
                 size={"2rem"}
               />
             </ModalCover>
-            <ModalTitle>{data?.title ? data?.title : data?.name}</ModalTitle>
-            <ModalCategory>
-              {/* 줄거리 */}
-              <ModalItem>
-                <ModalOverView title={data?.overview}>
-                  {data && data?.overview.length > 390
-                    ? data?.overview.slice(0, 390) + "..."
-                    : data?.overview}
-                </ModalOverView>
-              </ModalItem>
-
-              {/* 영화 - 개봉일, tv - 편성일 */}
-              {data?.release_date ? (
+            <ModalContents>
+              <ModalTitle>{data?.title ? data?.title : data?.name}</ModalTitle>
+              <ModalCategory>
+                {/* 줄거리 */}
                 <ModalItem>
-                  <ItemTitle>개봉일 </ItemTitle>
-                  <ItemValue>{data?.release_date}</ItemValue>
+                  <ModalOverView title={data?.overview}>
+                    {data && data?.overview.length > 390
+                      ? data?.overview.slice(0, 390) + "..."
+                      : data?.overview}
+                  </ModalOverView>
                 </ModalItem>
-              ) : (
-                <ModalItem>
-                  <ItemTitle>편성 </ItemTitle>
-                  <ItemValue>{data?.first_air_date}</ItemValue>
-                </ModalItem>
-              )}
 
-              {/* tv - 송출 방송사 및 vod사 */}
-              {data?.networks && data?.networks.length > 0 ? (
-                <>
+                {/* 영화 - 개봉일, tv - 편성일 */}
+                {data?.release_date ? (
                   <ModalItem>
-                    <ItemTitle>채널 </ItemTitle>
-                    <ItemValue>
-                      {data?.networks.map((n) => (
-                        <img
-                          className="channel"
-                          key={n.id}
-                          alt={n.name}
-                          src={makeImagePath(n.logo_path || "")}
-                        />
-                      ))}
-                    </ItemValue>
+                    <ItemTitle>개봉일 </ItemTitle>
+                    <ItemValue>{data?.release_date}</ItemValue>
                   </ModalItem>
-                  <Clear />
-                </>
-              ) : null}
+                ) : (
+                  <ModalItem>
+                    <ItemTitle>편성 </ItemTitle>
+                    <ItemValue>{data?.first_air_date}</ItemValue>
+                  </ModalItem>
+                )}
 
-              {/* 평점 */}
-              <ModalItem>
-                <ItemTitle>평점 </ItemTitle>
-                <ItemValue>
-                  <ReactStars
-                    count={5}
-                    value={data?.vote_average ? data?.vote_average / 2 : 0}
-                    color1="#E6E6E6"
-                    color2="#FFCC33"
-                    half
-                    size={20}
-                    edit={false}
-                    className="rating"
-                  />
-                  <span>({data?.vote_average.toFixed(1)})</span>
-                </ItemValue>
-              </ModalItem>
+                {/* tv - 송출 방송사 및 vod사 */}
+                {data?.networks && data?.networks.length > 0 ? (
+                  <>
+                    <ModalItem>
+                      <ItemTitle>채널 </ItemTitle>
+                      <ItemValue>
+                        {data?.networks.map((n) => (
+                          <img
+                            className="channel"
+                            key={n.id}
+                            alt={n.name}
+                            src={makeImagePath(n.logo_path || "")}
+                          />
+                        ))}
+                      </ItemValue>
+                    </ModalItem>
+                    <Clear />
+                  </>
+                ) : null}
 
-              {/* 장르 */}
-              {data?.genres && data?.genres.length > 0 ? (
+                {/* 평점 */}
                 <ModalItem>
-                  <ItemTitle>장르</ItemTitle>
+                  <ItemTitle>평점 </ItemTitle>
                   <ItemValue>
-                    {data?.genres.map((g, idx) =>
-                      data?.genres.length === idx + 1 ? (
-                        <span key={g.id}>{g.name}</span>
-                      ) : (
-                        <span key={g.id}>{g.name}, </span>
-                      )
-                    )}
+                    <ReactStars
+                      count={5}
+                      value={data?.vote_average ? data?.vote_average / 2 : 0}
+                      color1="#E6E6E6"
+                      color2="#FFCC33"
+                      half
+                      size={20}
+                      edit={false}
+                      className="rating"
+                    />
+                    <span>({data?.vote_average.toFixed(1)})</span>
                   </ItemValue>
                 </ModalItem>
-              ) : null}
 
-              {/* 영화 - 상영시간 */}
-              {data?.runtime ? (
-                <ModalItem>
-                  <ItemTitle>상영시간</ItemTitle>
-                  <ItemValue>{hourMinSec(data?.runtime)}</ItemValue>
-                </ModalItem>
-              ) : null}
-            </ModalCategory>
+                {/* 장르 */}
+                {data?.genres && data?.genres.length > 0 ? (
+                  <ModalItem>
+                    <ItemTitle>장르</ItemTitle>
+                    <ItemValue>
+                      {data?.genres.map((g, idx) =>
+                        data?.genres.length === idx + 1 ? (
+                          <span key={g.id}>{g.name}</span>
+                        ) : (
+                          <span key={g.id}>{g.name}, </span>
+                        )
+                      )}
+                    </ItemValue>
+                  </ModalItem>
+                ) : null}
+
+                {/* 영화 - 상영시간 */}
+                {data?.runtime ? (
+                  <ModalItem>
+                    <ItemTitle>상영시간</ItemTitle>
+                    <ItemValue>{hourMinSec(data?.runtime)}</ItemValue>
+                  </ModalItem>
+                ) : null}
+              </ModalCategory>
+            </ModalContents>
           </>
         }
       </ModalBox>

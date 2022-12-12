@@ -39,7 +39,11 @@ const Wrapper = styled.div<{ bgphoto: string }>`
   }
   @media screen and (max-width: 1000px) {
     height: 65%;
+    min-height: 64.8rem;
     padding: 4.2rem 6rem;
+  }
+  @media screen and (max-width: 700px) {
+    min-height: 53.4rem;
   }
   @media screen and (max-width: 500px) {
     height: 50%;
