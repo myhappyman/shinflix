@@ -41,15 +41,15 @@ const ModalBox = styled(motion.div)`
 
   @media only screen and (max-width: 800px) {
     top: 5rem;
-    width: 90%;
     min-width: 58.8rem;
+    width: 90%;
     height: auto;
   }
   @media only screen and (max-width: 700px) {
     top: 0;
     bottom: 0;
-    width: 100%;
     min-width: auto;
+    width: 100%;
     border-radius: 0;
   }
 
