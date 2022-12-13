@@ -6,6 +6,16 @@ export const windowWidth = atom({
   default: window.innerWidth,
 });
 
+// pc인지 mobile접근인지 구분하기
+export const isMobile = atom({
+  key: "isMobile",
+  default:
+    navigator.userAgent.indexOf("iPhone") > -1 ||
+    navigator.userAgent.indexOf("Android") > -1
+      ? true
+      : false,
+});
+
 //배너 사이즈 검색 할 사이즈
 export const BannerSize = selector({
   key: "bannerSize",

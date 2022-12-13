@@ -4,6 +4,9 @@ import styled from "styled-components";
 import { motion, useAnimation, useScroll } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { BsArrowUpRight } from "react-icons/bs";
+import { isMobile } from "../../atoms";
+import { useRecoilValue } from "recoil";
 
 const Nav = styled(motion.nav)`
   display: flex;
@@ -75,7 +78,7 @@ const Circle = styled(motion.span)`
   transition: transformX(-50%);
 `;
 
-const Search = styled.form`
+const Search = styled.form<{ searchOpen: boolean }>`
   position: relative;
   display: flex;
   justify-content: center;
@@ -84,11 +87,19 @@ const Search = styled.form`
   svg {
     height: 2.5rem;
   }
+  .searchBtn {
+    position: absolute;
+    right: 7px;
+    opacity: ${(props) => (props.searchOpen ? 1 : 0)};
+    z-index: 0;
+    cursor: pointer;
+  }
 `;
 
 const SearchIcon = styled(motion.svg)`
   position: absolute;
   left: 0;
+  z-index: 1;
   cursor: pointer;
 `;
 
@@ -144,7 +155,7 @@ function Header() {
   const navAnimation = useAnimation();
   const inputAnimation = useAnimation();
   const { scrollY } = useScroll();
-
+  const mobile = useRecoilValue(isMobile);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const navigate = useNavigate();
   const { register, handleSubmit } = useForm<IForm>({
@@ -153,13 +164,16 @@ function Header() {
     },
   });
   const initializationInput = () => {
-    setSearchOpen(false);
-    inputAnimation.start({
-      scaleX: 0,
-    });
+    // mobile만 keyboard창이 올라오므로 벗어난다면 강제로 닫아주는 처리
+    if (mobile) {
+      setSearchOpen(false);
+      inputAnimation.start({
+        scaleX: 0,
+      });
+    }
   };
   const { ref, ...rest } = register("keyword", {
-    required: true,
+    required: "검색어를 입력하세요.",
     minLength: 2,
     onBlur: initializationInput,
   });
@@ -224,7 +238,7 @@ function Header() {
         </Items>
       </Col>
       <Col>
-        <Search onSubmit={handleSubmit(onValid)}>
+        <Search onSubmit={handleSubmit(onValid)} searchOpen={searchOpen}>
           <SearchIcon
             onClick={toggleSearch}
             animate={{ x: searchOpen ? searchLocate * -1 : -25 }}
@@ -239,6 +253,7 @@ function Header() {
               clipRule="evenodd"
             ></path>
           </SearchIcon>
+
           <Input
             // {...register("keyword", { required: true, minLength: 2 })}
             {...rest}
@@ -254,6 +269,10 @@ function Header() {
             transition={{ type: "linear" }}
             placeholder="검색"
             type="text"
+          />
+          <BsArrowUpRight
+            onClick={handleSubmit(onValid)}
+            className="searchBtn"
           />
         </Search>
       </Col>

@@ -49,6 +49,7 @@ const ModalBox = styled(motion.div)`
     top: 0;
     bottom: 0;
     width: 100%;
+    min-width: auto;
     border-radius: 0;
   }
 

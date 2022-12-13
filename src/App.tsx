@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
-import { windowWidth } from "./atoms";
+import { isMobile, windowWidth } from "./atoms";
 import Header from "./Routes/Components/Header";
 import Home from "./Routes/Home";
 import Search from "./Routes/Search";
@@ -10,11 +10,22 @@ import Tv from "./Routes/Tv";
 function App() {
   // 반응형을 위한 window resize atom에 담아두기
   const setWidth = useSetRecoilState(windowWidth);
+  const setIsMobile = useSetRecoilState(isMobile);
   useEffect(() => {
-    const debouncedResizeHandler = () => setWidth(window.innerWidth);
+    const debouncedResizeHandler = () => {
+      setWidth(window.innerWidth);
+
+      // 모바일을 또 체크할 필요없지만 크롬에서 관리자도구로 모바일 변경하고 안되는 경우 방지용
+      setIsMobile(
+        navigator.userAgent.indexOf("iPhone") > -1 ||
+          navigator.userAgent.indexOf("Android") > -1
+          ? true
+          : false
+      );
+    };
     window.addEventListener("resize", debouncedResizeHandler);
     return () => window.removeEventListener("resize", debouncedResizeHandler);
-  }, [setWidth]);
+  }, [setWidth, setIsMobile]);
 
   return (
     <Router basename={process.env.PUBLIC_URL}>

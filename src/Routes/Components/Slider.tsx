@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { AnimatePresence, motion, PanInfo } from "framer-motion";
 import styled from "styled-components";
 import { IGetDataResult } from "../../api";
 import { makeImagePath } from "../../utils";
@@ -7,12 +7,14 @@ import { PathMatch, useMatch, useNavigate } from "react-router-dom";
 import Modal from "./Modal";
 import { AiOutlineLeft, AiOutlineRight } from "react-icons/ai";
 import { useRecoilValue } from "recoil";
-import { slideCnt } from "../../atoms";
+import { isMobile, slideCnt } from "../../atoms";
 
-const Wrapper = styled.div`
+const Wrapper = styled(motion.div)`
   position: relative;
-  height: 23.9rem;
+  min-height: 23.9rem;
   margin-top: 3rem;
+  /* 슬라이더 돌리면서 스크롤 터짐 방지용 */
+  overflow: hidden;
   :hover .arrow {
     opacity: 1;
   }
@@ -181,21 +183,40 @@ export default function Sliders({
   const [index, setIndex] = useState(0);
   const [leaving, setLeaving] = useState(false);
 
-  const toggleLeaving = () => setLeaving((prev) => !prev);
+  const toggleLeaving = (value: boolean) => setLeaving(value);
   const changeIndex = (right: number) => {
     if (leaving) return;
 
     if (data) {
-      toggleLeaving(); // true 처리용 > 강제 흘러감 방지
+      toggleLeaving(true); // true 처리용 > 강제 흘러감 방지
       setIsRight(right);
       const totalLength = data.results.length;
       //20개 리스트에서 18개만 보여주기 위해 floor처리
-      const maxIndex = Math.floor(totalLength / offset);
+      const maxIndex =
+        totalLength % offset === 0
+          ? Math.floor(totalLength / offset) - 1
+          : Math.floor(totalLength / offset);
+
       right === 1
-        ? setIndex((prev) => (prev === maxIndex ? 0 : prev + 1))
+        ? setIndex((prev) => (prev >= maxIndex ? 0 : prev + 1))
         : setIndex((prev) => (prev === 0 ? maxIndex : prev - 1));
     }
   };
+
+  //resize로 인해 index의 값이 엄청 커진상태에서 offset개수가 많아지면 값이 안맞는 현상 막기위해 재연산처리추가
+  useEffect(() => {
+    if (data) {
+      const dataTotalLen = data.results.length;
+      const maxIdx =
+        dataTotalLen % offset === 0
+          ? Math.floor(dataTotalLen / offset) - 1
+          : Math.floor(dataTotalLen / offset);
+
+      if (index > maxIdx) {
+        setIndex(maxIdx);
+      }
+    }
+  }, [offset, data, index, setIndex]);
 
   const navigate = useNavigate();
   const onBoxClicked = (menu: string, type: string, id: number) => {
@@ -206,22 +227,40 @@ export default function Sliders({
     `/${menuName}/${listType}/:id`
   );
 
-  const user = navigator.userAgent;
-  const mobile =
-    user.indexOf("iPhone") > -1 || user.indexOf("Android") > -1 ? 1 : 0;
+  const mobile = useRecoilValue(isMobile);
+
+  const rowProps = {
+    gridcnt: offset,
+    custom: isRight,
+    variants: rowVariants,
+    initial: "hidden",
+    animate: "visible",
+    exit: "exit",
+    transition: { type: "tween", duration: 1 },
+    key: index,
+  };
+
+  const dragWrapperRef = useRef<HTMLDivElement>(null);
+  const dragEnd = (event: TouchEvent, info: PanInfo) => {
+    if (info.delta.x > 1) {
+      changeIndex(-1);
+    } else if (info.delta.x < -1) {
+      changeIndex(1);
+    }
+  };
 
   return (
-    <Wrapper>
+    <Wrapper ref={dragWrapperRef}>
       <Title>{title}</Title>
       <LeftArrowBtn
-        mobile={mobile}
+        mobile={mobile ? 1 : 0}
         className="arrow"
         onClick={() => changeIndex(-1)}
       >
         <AiOutlineLeft />
       </LeftArrowBtn>
       <RightArrowBtn
-        mobile={mobile}
+        mobile={mobile ? 1 : 0}
         className="arrow"
         onClick={() => changeIndex(1)}
       >
@@ -229,18 +268,18 @@ export default function Sliders({
       </RightArrowBtn>
       <AnimatePresence
         initial={false}
-        onExitComplete={toggleLeaving}
+        onExitComplete={() => toggleLeaving(false)}
         custom={isRight}
       >
         <Row
-          gridcnt={offset}
-          custom={isRight}
-          variants={rowVariants}
-          initial="hidden"
-          animate="visible"
-          exit="exit"
-          transition={{ type: "tween", duration: 1 }}
-          key={index}
+          {...rowProps}
+          {...(mobile
+            ? {
+                drag: "x",
+                dragConstraints: dragWrapperRef,
+                onDragEnd: dragEnd,
+              }
+            : {})}
         >
           {data?.results
             .slice(offset * index, offset * index + offset)
