@@ -70,6 +70,7 @@ const Item = styled.li`
 
 const Circle = styled(motion.span)`
   position: absolute;
+  top: 0; /* 없으면 밑으로 붙는현상이 있어서 기본값 추가 */
   right: -0.8rem;
   width: 0.5rem;
   height: 0.5rem;
@@ -84,12 +85,16 @@ const Search = styled.form<{ searchOpen: boolean }>`
   justify-content: center;
   align-items: center;
   color: white;
-  svg {
+  .searchIcon {
+    width: 2.5rem;
     height: 2.5rem;
   }
   .searchBtn {
     position: absolute;
-    right: 7px;
+    top: -0.9rem;
+    right: 1rem;
+    width: 2rem;
+    height: 2rem;
     opacity: ${(props) => (props.searchOpen ? 1 : 0)};
     z-index: 0;
     cursor: pointer;
@@ -98,6 +103,7 @@ const Search = styled.form<{ searchOpen: boolean }>`
 
 const SearchIcon = styled(motion.svg)`
   position: absolute;
+  top: -1.2rem;
   left: 0;
   z-index: 1;
   cursor: pointer;
@@ -115,13 +121,16 @@ const Input = styled(motion.input)`
   z-index: -1;
   transform-origin: right center;
   outline: none;
-
   &::placeholder {
     color: #95a5a6;
+    font-size: 1.2rem;
   }
 
   @media only screen and (max-width: 650px) {
     width: 15rem;
+    &::placeholder {
+      font-size: 0.4rem;
+    }
   }
 `;
 
@@ -151,6 +160,8 @@ function Header() {
   const [searchLocate, setSearchLocate] = useState(0);
   const homeMatch: PathMatch<string> | null = useMatch("/");
   const homeMatch2: PathMatch<string> | null = useMatch("/home/*");
+  console.log("homeMatch", homeMatch);
+  console.log("homeMatch2", homeMatch2);
   const tvMatch: PathMatch<string> | null = useMatch("/tv/*");
   const navAnimation = useAnimation();
   const inputAnimation = useAnimation();
@@ -208,6 +219,15 @@ function Header() {
     setSearchLocate((inputRef.current?.clientWidth || -25) - 6);
   };
 
+  //resize이벤트 발생시 input size에 따라 돋보기 모양의 searchIcon 위치 변경용
+  useEffect(() => {
+    const debouncedResizeHandler = () => {
+      setSearchLocate((inputRef.current?.clientWidth || -25) - 6);
+    };
+    window.addEventListener("resize", debouncedResizeHandler);
+    return () => window.removeEventListener("resize", debouncedResizeHandler);
+  }, [setSearchLocate]);
+
   return (
     <Nav variants={navVariants} animate={navAnimation} initial="top">
       <Col>
@@ -246,6 +266,7 @@ function Header() {
             fill="currentColor"
             viewBox="0 0 20 20"
             xmlns="http://www.w3.org/2000/svg"
+            className="searchIcon"
           >
             <path
               fillRule="evenodd"
@@ -267,7 +288,7 @@ function Header() {
             initial={{ scaleX: 0 }}
             animate={inputAnimation}
             transition={{ type: "linear" }}
-            placeholder="검색"
+            placeholder="검색어를 입력하세요."
             type="text"
           />
           <BsArrowUpRight
