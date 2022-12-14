@@ -160,8 +160,6 @@ function Header() {
   const [searchLocate, setSearchLocate] = useState(0);
   const homeMatch: PathMatch<string> | null = useMatch("/");
   const homeMatch2: PathMatch<string> | null = useMatch("/home/*");
-  console.log("homeMatch", homeMatch);
-  console.log("homeMatch2", homeMatch2);
   const tvMatch: PathMatch<string> | null = useMatch("/tv/*");
   const navAnimation = useAnimation();
   const inputAnimation = useAnimation();

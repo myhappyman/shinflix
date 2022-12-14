@@ -16,12 +16,7 @@ function App() {
       setWidth(window.innerWidth);
 
       // 모바일을 또 체크할 필요없지만 크롬에서 관리자도구로 모바일 변경하고 안되는 경우 방지용
-      setIsMobile(
-        navigator.userAgent.indexOf("iPhone") > -1 ||
-          navigator.userAgent.indexOf("Android") > -1
-          ? true
-          : false
-      );
+      setIsMobile(/iPhone|iPad|iPod|Android/i.test(navigator.userAgent));
     };
     window.addEventListener("resize", debouncedResizeHandler);
     return () => window.removeEventListener("resize", debouncedResizeHandler);

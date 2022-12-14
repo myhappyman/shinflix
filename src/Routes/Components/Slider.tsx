@@ -183,9 +183,13 @@ export default function Sliders({
   const [index, setIndex] = useState(0);
   const [leaving, setLeaving] = useState(false);
 
-  const toggleLeaving = (value: boolean) => setLeaving(value);
+  const toggleLeaving = (value: boolean) => {
+    setLeaving(value);
+    setDragMode(value);
+  };
   const changeIndex = (right: number) => {
-    if (leaving) return;
+    // 슬라이더 버튼 및 드래그로 강제 흘러감 방지용
+    if (leaving || dragMode) return;
 
     if (data) {
       toggleLeaving(true); // true 처리용 > 강제 흘러감 방지
@@ -222,13 +226,17 @@ export default function Sliders({
   const onBoxClicked = (menu: string, type: string, id: number) => {
     navigate(`/${menu}/${type}/${id}`);
   };
-
   const bigMatch: PathMatch<string> | null = useMatch(
     `/${menuName}/${listType}/:id`
   );
 
-  const mobile = useRecoilValue(isMobile);
+  const mobile = useRecoilValue(isMobile); //mobile인지 아닌지 구분용
+  const [dragMode, setDragMode] = useState(false); // 강제 드래그 오류 방지용
+  const dragWrapperRef = useRef<HTMLDivElement>(null); // 드래그 영역 부모 잡기위해 useRef사용
 
+  /**
+   * Row 컴포넌트 props
+   */
   const rowProps = {
     gridcnt: offset,
     custom: isRight,
@@ -240,14 +248,37 @@ export default function Sliders({
     key: index,
   };
 
-  const dragWrapperRef = useRef<HTMLDivElement>(null);
+  /**
+   * 드래그 이벤트 끝나고 delta값에 따라 좌, 우 슬라이드 이동처리
+   * @param event
+   * @param info
+   */
   const dragEnd = (event: TouchEvent, info: PanInfo) => {
-    if (info.delta.x > 1) {
-      changeIndex(-1);
-    } else if (info.delta.x < -1) {
-      changeIndex(1);
+    if (!leaving && !dragMode) {
+      if (info.delta.x > 1) {
+        changeIndex(-1);
+      } else if (info.delta.x < -1) {
+        changeIndex(1);
+      }
     }
   };
+  // 아이폰 아이패드에서 간헐적으로 드래그 이벤트시 오류 발생해서 2중으로 막음
+  // 아직도 해결은 안됨 ㅡㅡㅋ 간헐적 발생..
+  const onClickToArrowBtn = (right: number) => {
+    if (!leaving && !dragMode) {
+      changeIndex(right);
+    }
+  };
+
+  // useEffect(() => {
+  //   let timer = setInterval(() => {
+  //     if (mobile && dragMode) {
+  //       setDragMode(false);
+  //     }
+  //   }, 2000);
+
+  //   return () => clearInterval(timer);
+  // }, []);
 
   return (
     <Wrapper ref={dragWrapperRef}>
@@ -255,14 +286,14 @@ export default function Sliders({
       <LeftArrowBtn
         mobile={mobile ? 1 : 0}
         className="arrow"
-        onClick={() => changeIndex(-1)}
+        onClick={() => onClickToArrowBtn(-1)}
       >
         <AiOutlineLeft />
       </LeftArrowBtn>
       <RightArrowBtn
         mobile={mobile ? 1 : 0}
         className="arrow"
-        onClick={() => changeIndex(1)}
+        onClick={() => onClickToArrowBtn(1)}
       >
         <AiOutlineRight />
       </RightArrowBtn>
@@ -278,6 +309,7 @@ export default function Sliders({
                 drag: "x",
                 dragConstraints: dragWrapperRef,
                 onDragEnd: dragEnd,
+                dragListener: !dragMode,
               }
             : {})}
         >

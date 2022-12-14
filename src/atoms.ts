@@ -9,11 +9,7 @@ export const windowWidth = atom({
 // pc인지 mobile접근인지 구분하기
 export const isMobile = atom({
   key: "isMobile",
-  default:
-    navigator.userAgent.indexOf("iPhone") > -1 ||
-    navigator.userAgent.indexOf("Android") > -1
-      ? true
-      : false,
+  default: /iPhone|iPad|iPod|Android/i.test(navigator.userAgent),
 });
 
 //배너 사이즈 검색 할 사이즈
