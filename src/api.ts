@@ -32,7 +32,7 @@ export interface IGetDataResult {
   total_results: number;
 }
 
-interface IGenre {
+export interface IGenre {
   id: number;
   name: string;
 }
@@ -46,14 +46,17 @@ export interface IDetailInfo {
   id: number;
   overview: string;
   title?: string;
+  original_title?: string;
   name?: string;
   vote_average: number;
   runtime: number;
   backdrop_path: string;
+  poster_path: string;
   genres: IGenre[];
   release_date?: string;
   first_air_date?: string;
   networks: INetworks[];
+  tagline?: string;
 }
 
 // Movies - NowPlaying

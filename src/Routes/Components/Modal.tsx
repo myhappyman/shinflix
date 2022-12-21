@@ -2,13 +2,14 @@ import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { useMatch, useNavigate } from "react-router-dom";
 import styled, { createGlobalStyle } from "styled-components";
-import { getDetailData, IDetailInfo } from "../../api";
+import { getDetailData, IDetailInfo, IGenre } from "../../api";
 import { makeImagePath } from "../../utils";
 import ReactStars from "react-stars";
 import { AiOutlineClose } from "react-icons/ai";
+import ModalInfoItem from "../ModalItem";
 
 const GlobalStyle = createGlobalStyle`
-html{overflow: hidden;}
+  html{overflow: hidden;}
 `;
 const Overlay = styled(motion.div)`
   position: fixed;
@@ -22,16 +23,17 @@ const Overlay = styled(motion.div)`
 
 const ModalBox = styled(motion.div)`
   position: fixed;
-  top: 8rem;
+  top: 12rem;
   left: 0;
   right: 0;
   margin: 0 auto;
-  width: 40%;
+  width: 50%;
   min-width: 76.8rem;
-  height: 85%;
+  height: 75%;
   overflow: auto;
   border-radius: 1.5rem;
   background-color: ${(props) => props.theme.black.lighter};
+  color: ${(props) => props.theme.white.lighter};
   z-index: 100;
 
   /* 높이에 따라 스크롤 터지게 만들기 */
@@ -101,17 +103,160 @@ const ModalCover = styled.div`
     }
   }
 `;
-const ModalContents = styled.div`
-  position: relative;
-  /* top: -10rem; */
-  margin-top: -10rem;
-  color: ${(props) => props.theme.white.lighter};
-  padding: 0 2rem;
+
+const ModalCoverTitle = styled.div`
+  position: absolute;
+  left: calc(30% + 3.5rem);
+  bottom: 2rem;
+  float: right;
+  font-weight: 700;
+
+  @media only screen and (max-width: 700px) {
+    display: none;
+  }
 `;
 
 const ModalTitle = styled.h3`
-  padding: 2rem 0;
-  font-size: 4.6rem;
+  font-size: 3.6rem;
+`;
+
+const ModalSmallTitle = styled.h3`
+  font-size: 1.8rem;
+  font-weight: 400;
+`;
+
+const ModalContents = styled.div`
+  position: relative;
+  padding: 2rem 4rem 0 4rem;
+  font-weight: 100;
+
+  @media only screen and (max-width: 700px) {
+    margin-top: -30rem;
+    text-align: center;
+  }
+`;
+
+const ModalImage = styled.div`
+  float: left;
+  width: 30%;
+  margin-top: -17rem;
+  img {
+    width: 100%;
+  }
+
+  @media only screen and (max-width: 700px) {
+    margin: 0;
+    width: 100%;
+    text-align: center;
+    img {
+      width: 50%;
+      min-width: 200px;
+      margin: 0 auto;
+    }
+  }
+`;
+
+const ModalInfoTitle = styled.div`
+  display: none;
+
+  @media only screen and (max-width: 700px) {
+    display: block;
+    text-align: center;
+    margin: 2rem 0;
+  }
+`;
+
+const ModalTextCnt = styled.div`
+  float: left;
+  width: 70%;
+  padding-left: 2rem;
+
+  @media only screen and (max-width: 700px) {
+    padding-left: 0;
+    width: 100%;
+  }
+`;
+
+const ModalInfo = styled.ul`
+  font-size: 1.6rem;
+  line-height: 2.4rem;
+  li {
+    float: left;
+    .rating {
+      position: relative;
+      display: inline-block;
+      margin-top: -2px;
+      overflow: hidden;
+    }
+    .ratingValue {
+      display: inline-block;
+      padding-left: 0.4rem;
+      vertical-align: top;
+    }
+  }
+  li ~ li {
+    position: relative;
+    margin-left: 1.2rem;
+    padding-left: 1.2rem;
+  }
+  li ~ li:before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0.25rem;
+    height: 0.25rem;
+    border-radius: 50%;
+    background-color: #7e7e7e;
+  }
+
+  @media only screen and (max-width: 700px) {
+    text-align: center;
+    li {
+      display: inline-block;
+      float: none;
+    }
+    li ~ li {
+      margin-left: 0.6rem;
+      padding-left: 0.6rem;
+    }
+  }
+`;
+
+const ModalTagLine = styled.h3`
+  position: relative;
+  margin-bottom: 1rem;
+  padding-left: 1rem;
+  font-size: 1.4rem;
+  &:before {
+    content: "";
+    position: absolute;
+    width: 0.3rem;
+    height: 1.2rem;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: #ccc;
+  }
+
+  @media only screen and (max-width: 700px) {
+    display: inline;
+  }
+`;
+
+const ModalOverView = styled.p`
+  margin-bottom: 5rem;
+  font-size: 1.4rem;
+  line-height: 1.9rem;
+
+  @media only screen and (max-width: 700px) {
+    margin: 0 auto;
+    margin-top: 2rem;
+    text-align: left;
+    line-height: 2.4rem;
+    width: 90%;
+  }
 `;
 
 const ModalCategory = styled.ul`
@@ -153,11 +298,6 @@ const ItemTitle = styled.span`
 const ItemValue = styled.div`
   font-size: 1.6rem;
   line-height: 2.4rem;
-  .rating {
-    float: left;
-    top: -0.4rem;
-    margin-right: 0.5rem;
-  }
   .channel {
     float: left;
     height: 2rem;
@@ -183,11 +323,6 @@ const ItemValue = styled.div`
 const Clear = styled.div`
   clear: both;
   margin-bottom: 2rem;
-`;
-
-const ModalOverView = styled.p`
-  margin-bottom: 5rem;
-  font-size: 1.4rem;
 `;
 
 interface IModal {
@@ -222,12 +357,23 @@ export default function Modal({
     () => getDetailData(requestUrl, dataId) || null
   );
 
-  const hourMinSec = (time: number) => {
-    if (time > 60) {
-      return `${Math.floor(time / 60)}시간 ${time % 60}분`;
+  const getYear = (date: string) => {
+    if (date) {
+      return date.split("-")[0];
     } else {
-      return time + "분";
+      return "";
     }
+  };
+
+  const getGenreToString = (arr: IGenre[]): string => {
+    if (arr && arr.length > 0) {
+      return (
+        arr.map((g, idx) => {
+          return idx + 1 === arr.length ? `${g.name}` : `${g.name}`;
+        }) + ""
+      );
+    }
+    return "";
   };
 
   return (
@@ -254,94 +400,90 @@ export default function Modal({
                 className="closeModal"
                 size={"2rem"}
               />
+              <ModalCoverTitle>
+                <ModalTitle>
+                  {data?.title ? data?.title : data?.name}
+                </ModalTitle>
+                <ModalSmallTitle>
+                  {data?.original_title ? data?.original_title : ""}
+                </ModalSmallTitle>
+              </ModalCoverTitle>
             </ModalCover>
             <ModalContents>
-              <ModalTitle>{data?.title ? data?.title : data?.name}</ModalTitle>
-              <ModalCategory>
-                {/* 줄거리 */}
-                <ModalItem>
-                  <ModalOverView title={data?.overview}>
-                    {data && data?.overview.length > 390
-                      ? data?.overview.slice(0, 390) + "..."
-                      : data?.overview}
-                  </ModalOverView>
-                </ModalItem>
-
-                {/* 영화 - 개봉일, tv - 편성일 */}
-                {data?.release_date ? (
+              <ModalImage>
+                <img
+                  src={makeImagePath(data?.poster_path || "", "w500")}
+                  alt="poster"
+                />
+              </ModalImage>
+              <ModalTextCnt>
+                <ModalInfoTitle>
+                  <ModalTitle>
+                    {data?.title ? data?.title : data?.name}
+                  </ModalTitle>
+                  <ModalSmallTitle>
+                    {data?.original_title ? data?.original_title : ""}
+                  </ModalSmallTitle>
+                </ModalInfoTitle>
+                <ModalInfo>
+                  <ModalInfoItem datas={getYear(data?.release_date || "")} />
+                  <ModalInfoItem datas={getYear(data?.first_air_date || "")} />
+                  <ModalInfoItem
+                    datas={data?.runtime ? `${data?.runtime}분` : ""}
+                  />
+                  <ModalInfoItem datas={getGenreToString(data?.genres || [])} />
+                  {data?.vote_average ? (
+                    <li>
+                      <ReactStars
+                        count={5}
+                        value={data?.vote_average ? data?.vote_average / 2 : 0}
+                        color1="#E6E6E6"
+                        color2="#FFCC33"
+                        half
+                        size={20}
+                        edit={false}
+                        className="rating"
+                      />
+                      <span className="ratingValue">
+                        ({data?.vote_average.toFixed(1)})
+                      </span>
+                    </li>
+                  ) : null}
+                </ModalInfo>
+                <ModalCategory>
+                  {/* 줄거리 */}
                   <ModalItem>
-                    <ItemTitle>개봉일 </ItemTitle>
-                    <ItemValue>{data?.release_date}</ItemValue>
+                    {data?.tagline ? (
+                      <ModalTagLine>{data?.tagline}</ModalTagLine>
+                    ) : null}
+                    <ModalOverView title={data?.overview}>
+                      {data && data?.overview.length > 390
+                        ? data?.overview.slice(0, 390) + "..."
+                        : data?.overview}
+                    </ModalOverView>
                   </ModalItem>
-                ) : (
-                  <ModalItem>
-                    <ItemTitle>편성 </ItemTitle>
-                    <ItemValue>{data?.first_air_date}</ItemValue>
-                  </ModalItem>
-                )}
 
-                {/* tv - 송출 방송사 및 vod사 */}
-                {data?.networks && data?.networks.length > 0 ? (
-                  <>
-                    <ModalItem>
-                      <ItemTitle>채널 </ItemTitle>
-                      <ItemValue>
-                        {data?.networks.map((n) => (
-                          <img
-                            className="channel"
-                            key={n.id}
-                            alt={n.name}
-                            src={makeImagePath(n.logo_path || "")}
-                          />
-                        ))}
-                      </ItemValue>
-                    </ModalItem>
-                    <Clear />
-                  </>
-                ) : null}
-
-                {/* 평점 */}
-                <ModalItem>
-                  <ItemTitle>평점 </ItemTitle>
-                  <ItemValue>
-                    <ReactStars
-                      count={5}
-                      value={data?.vote_average ? data?.vote_average / 2 : 0}
-                      color1="#E6E6E6"
-                      color2="#FFCC33"
-                      half
-                      size={20}
-                      edit={false}
-                      className="rating"
-                    />
-                    <span>({data?.vote_average.toFixed(1)})</span>
-                  </ItemValue>
-                </ModalItem>
-
-                {/* 장르 */}
-                {data?.genres && data?.genres.length > 0 ? (
-                  <ModalItem>
-                    <ItemTitle>장르</ItemTitle>
-                    <ItemValue>
-                      {data?.genres.map((g, idx) =>
-                        data?.genres.length === idx + 1 ? (
-                          <span key={g.id}>{g.name}</span>
-                        ) : (
-                          <span key={g.id}>{g.name}, </span>
-                        )
-                      )}
-                    </ItemValue>
-                  </ModalItem>
-                ) : null}
-
-                {/* 영화 - 상영시간 */}
-                {data?.runtime ? (
-                  <ModalItem>
-                    <ItemTitle>상영시간</ItemTitle>
-                    <ItemValue>{hourMinSec(data?.runtime)}</ItemValue>
-                  </ModalItem>
-                ) : null}
-              </ModalCategory>
+                  {/* tv - 송출 방송사 및 vod사 */}
+                  {data?.networks && data?.networks.length > 0 ? (
+                    <>
+                      <ModalItem>
+                        <ItemTitle>채널 </ItemTitle>
+                        <ItemValue>
+                          {data?.networks.map((n) => (
+                            <img
+                              className="channel"
+                              key={n.id}
+                              alt={n.name}
+                              src={makeImagePath(n.logo_path || "")}
+                            />
+                          ))}
+                        </ItemValue>
+                      </ModalItem>
+                      <Clear />
+                    </>
+                  ) : null}
+                </ModalCategory>
+              </ModalTextCnt>
             </ModalContents>
           </>
         }
